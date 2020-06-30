@@ -12,3 +12,20 @@ Download the following to get started programming
 
 https://nodejs.org/en/
 https://www.postman.com/
+
+# Contributors
+- Liang Liu
+- Andrew Han
+- Adrian Lee 
+
+# Technologies
+- Node.js
+- Jest / SuperTest (for testing suite)
+- Express (web server for REST API)
+- TypeScript
+  - adds static typing
+  - adds signatures to the functions directly
+
+# Documentation 
+
+[Link to Documentation](documentation/README.md)

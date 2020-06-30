@@ -16,7 +16,7 @@ Get the details of the courses' section with the given academic year, subject, n
 
 **Code** : `200 OK`
 
-**Content examples**
+**Content examples** 
 
 For a specific course given department code, number, and section, return the info for that section.
 
@@ -92,7 +92,7 @@ eg CPSC 221 101
   "num_credits": 4,
   "course_avg": 69,
   "prof_rating": 4.20,
-  "link": "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=210&section=101"
+  "link": "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101"
 }
 ```
 

@@ -28,16 +28,18 @@ eg CPSC --> CPSC 100, CPSC 103, CPSC 107, etc.
     {
       "name"    : "CPSC 100",
       "subject" : "CPSC",
-      "number"  : "100",
+      "number"  : 100,  
       "title"   : "Computational Thinking", 
-      "endpoint": "/course/CPSC/100/"
+      "endpoint": "/course/CPSC/100/",
+      "link"    : "..."
     },
-    {
+    { 
       "name"    : "CPSC 103",
       "subject" : "CPSC",
-      "number"  : "103",
+      "number"  : 103,
       "title"   : "Introduction to Systematic Program Design",
-      "endpoint": "/course/CPSC/103/"  
+      "endpoint": "/course/CPSC/103/",
+      "link": "..."
     },
     // etc.
   ]
