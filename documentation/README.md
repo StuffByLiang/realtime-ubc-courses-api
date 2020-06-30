@@ -17,3 +17,8 @@ Use cases:
 - prof searcher
 - prerequisite checker 
 - course searcher
+
+# Contributors
+- Liang Liu
+- Andrew Han
+- Adrian Lee 
