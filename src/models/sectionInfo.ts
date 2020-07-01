@@ -1,4 +1,6 @@
-interface section_info {
+import Course from "./course";
+
+export default interface section_info {
     textbooks: Array<string>;
     pre_reqs: Array<Course>;
     prof: string; 

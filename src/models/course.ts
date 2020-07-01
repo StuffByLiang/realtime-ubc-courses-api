@@ -1,4 +1,4 @@
-interface Course {
+export default interface Course {
   name: string;
   subject: string;
   number: number;

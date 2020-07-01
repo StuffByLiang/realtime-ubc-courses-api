@@ -2,10 +2,10 @@
   "name": "ubc-course-api",
   "version": "1.0.0",
   "description": "realtime ubc course scraper ",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
     "helloworld": "echo \"Hello world!!\"",
-    "start": "nodemon src/index.ts",
+    "start": "nodemon index.ts",
     "test": "jest",
     "lint": "eslint . --ext .ts"
   },

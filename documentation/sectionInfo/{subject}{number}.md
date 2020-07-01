@@ -1,6 +1,6 @@
 # Get Course/Section Info
 
-Get the details of all sections under the given academic year, subject, and course number
+Get the details of all sections under the given *academic year, subject, and course number
 
 **URL** : `/sectionInfo/:subject/:number`
 
