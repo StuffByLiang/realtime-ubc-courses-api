@@ -25,7 +25,10 @@
   },
   "homepage": "https://github.com/StuffByLiang/realtime-ubc-courses-api#readme",
   "dependencies": {
+    "@types/cheerio": "^0.22.18",
     "@types/supertest": "^2.0.10",
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
     "nodemon": "^2.0.4"
   },

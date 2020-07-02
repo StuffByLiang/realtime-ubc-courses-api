@@ -67,6 +67,10 @@ eg CPSC 221 101
       }
     ]
   ],
+  "name": "CPSC 221 101",
+  "subject": "CPSC",
+  "number": 221,
+  "section": "101",
   "prof": "Joe Mama",
   "term": 1,
   "days": [

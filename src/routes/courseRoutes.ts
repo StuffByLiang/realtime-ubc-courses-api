@@ -1,20 +1,25 @@
 import express from 'express';
 import Course from "../models/course"
+import { CourseScraper } from "../util/CourseScraper"
 
 var router = express.Router(); 
 
+const courseScraper = new CourseScraper()
+
 // any endpoints beginning with /course
 
-router.get("/:subject", (req, res) => {
+router.get("/:subject", async (req, res) => {
   const subject = req.params.subject;
 
-  // TODO:
-
-  res.json({
-    courses: [
-      // stuff goes here
-    ]
-  });
+  try {                         
+    const courses: Array<Course> = await courseScraper.getCourseList(subject);
+    res.json({
+      courses: courses
+    });
+  } catch {
+    res.status(404).send("course not found");
+    console.log("invalid department code"); 
+  }
 });
 
 // router.get("/CPSC", (req, res) => {
