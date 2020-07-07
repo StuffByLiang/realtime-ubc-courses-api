@@ -1,14 +1,14 @@
 import SectionInfo from "../models/sectionInfo";
 import Section from "../models/section";
 import Course from "../models/course";
-import { Parser } from "./Parser";
+import Parser from "./Parser";
 
 /**
  * high level class that parses course and section information from urls 
  */
 const axios = require('axios').default;
 
-export class CourseScraper {
+export default class CourseScraper {
   parser: Parser;
 
   constructor() {
@@ -25,11 +25,6 @@ export class CourseScraper {
    * getSiteContent("https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101")
    */
   async getSiteHtml(url: string): Promise<string> {
-    // TODO:
-    // axios.get(url).then((res) => {
-    //   console.log(res 
-    // })
-    // return res; 
     try {
       let res = await axios.get(url);
       return res.data;
@@ -62,7 +57,7 @@ export class CourseScraper {
   async getSectionInfo(subject: string, number: string, section: string): Promise<SectionInfo> {
     const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=${subject}&course=${number}&section=${section}`;
     const html: string = await this.getSiteHtml(url);
-    const sectionInfo: SectionInfo = this.parseSectionHtml(html);
+    const sectionInfo: SectionInfo = await this.parseSectionHtml(html);
     return sectionInfo;
   }
   /**
@@ -79,33 +74,31 @@ export class CourseScraper {
     return sectionList;
   }
   /**
-   * Returns 
+   * Returns all of the SectionInfo for each section in a course
    * 
    * @param  {string} subject - Department Code
    * @param  {string} number  - Course #
    * @returns Promise         - Info for all of the sections offered for the course
    */
   async getSectionInfoList(subject: string, number: string): Promise<Array<SectionInfo>> {
-    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-department&dept=${subject}&course=${number}`;
-    const html: string = await this.getSiteHtml(url);
-    const sectionInfoList: Array<SectionInfo> = this.parseSectionInfoListHtml(html);
-    return sectionInfoList;
+    //TODO 
+    return null; 
+    // getSectionList -> forEach(getSectionInfo) <-- run all asyncronously
+    // return sectionInfoList;
   }
   
-  parseSectionHtml(html: string): SectionInfo {
-    return this.parser.parseSectionHtml(html);
+  async parseSectionHtml(html: string): Promise<SectionInfo> {
+    return await this.parser.parseSectionHtml(html);
   }
   parseSectionListHtml(html: string): Array<Section> {
     return this.parser.parseSectionListHtml(html);
   }
-  parseSectionInfoListHtml(html: string): Array<SectionInfo> {
-    return this.parser.parseSectionInfoListHtml(html);
-  }
+
   parseCourseListHtml(html: string): Array<Course> {
     return this.parser.parseCourseListHtml(html);
   }
-  parseCourse(html: string): Course {
-    return this.parser.parseCourse(html); 
-  }
+  // parseCourse(html: string): Course {
+  //   return this.parser.parseCourse(html); 
+  // }
   
 }

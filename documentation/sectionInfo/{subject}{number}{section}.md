@@ -29,44 +29,44 @@ eg CPSC 221 101
       "name": "Algorithms and Data Structures expensive book"
     },
   ],
-  "pre_reqs": [
-    [
-      {
-        "name"    : "CPSC 210",
-        "subject" : "CPSC",
-        "number"  : 210,
-        "title"   : "Software Construction", 
-        "endpoint": "/course/CPSC/210/",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=210"
-      },
-      {
-        "name"    : "CPEN 221",
-        "subject" : "CPEN",
-        "number"  :  221,
-        "title"   : "Principles of Software Construction", 
-        "endpoint": "/course/CPSC/221/",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPEN&course=221"
-      }
-    ],
-    [
-      {
-        "name"    : "CPSC 121",
-        "subject" : "CPSC",
-        "number"  : 121,
-        "title"   : "Models of Computation", 
-        "endpoint": "/course/CPSC/121/",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=121"
-      },
-      {
-        "name"    : "MATH 220",
-        "subject" : "MATH",
-        "number"  : 220,
-        "title"   : "Mathematical Proof", 
-        "endpoint": "/course/MATH/220/",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=MATH&course=220"
-      }
-    ]
-  ],
+  // "pre_reqs": [
+  //   [
+  //     {
+  //       "name"    : "CPSC 210",
+  //       "subject" : "CPSC",
+  //       "number"  : 210,
+  //       "title"   : "Software Construction", 
+  //       "endpoint": "/course/CPSC/210/",
+  //       "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=210"
+  //     },
+  //     {
+  //       "name"    : "CPEN 221",
+  //       "subject" : "CPEN",
+  //       "number"  :  221,
+  //       "title"   : "Principles of Software Construction", 
+  //       "endpoint": "/course/CPSC/221/",
+  //       "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPEN&course=221"
+  //     }
+  //   ],
+  //   [
+  //     {
+  //       "name"    : "CPSC 121",
+  //       "subject" : "CPSC",
+  //       "number"  : 121,
+  //       "title"   : "Models of Computation", 
+  //       "endpoint": "/course/CPSC/121/",
+  //       "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=121"
+  //     },
+  //     {
+  //       "name"    : "MATH 220",
+  //       "subject" : "MATH",
+  //       "number"  : 220,
+  //       "title"   : "Mathematical Proof", 
+  //       "endpoint": "/course/MATH/220/",
+  //       "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=MATH&course=220"
+  //     }
+  //   ]
+  // ],
   "name": "CPSC 221 101",
   "subject": "CPSC",
   "number": 221,

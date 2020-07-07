@@ -66,6 +66,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
       pre_reqs: [],
       prof: "Wong, Jessica",
       term: 1,
+      year: 2020,
       days: ["Tue", "Thu"],
       start_time: "15:30",
       end_time: "17:00", 
@@ -78,10 +79,10 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
       seats_reserved_for: ["BSC in year: <=2"],
       building: "CU",
       room: "ICCS 69420",
-      num_credits: 3,
+      num_credits: "3",
       course_avg: 69,
       prof_rating: 4.20,
-      link: "cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
+      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
     
     expect(result.status).toEqual(200);
@@ -144,6 +145,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
       pre_reqs: [],
       prof: "Wong, Jessica",
       term: 1,
+      year: 2020,
       days: ["Tue", "Thu"],
       start_time: "15:30",
       end_time: "17:00", 
@@ -156,10 +158,10 @@ describe("GET /sectionInfo/:subject/:number", () => {
       seats_reserved_for: ["BSC in year: <=2"],
       building: "CU",
       room: "ICCS 69420",
-      num_credits: 3,
+      num_credits: "3",
       course_avg: 69,
       prof_rating: 4.20,
-      link: "cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
+      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
     const exSection2: SectionInfo = {
       name: "CPSC 69 420",
@@ -170,6 +172,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
       pre_reqs: [],
       prof: "Belleville, Patrice",
       term: 1,
+      year: 2020,
       days: ["Mon"],
       start_time: "23:30",
       end_time: "17:00", 
@@ -182,10 +185,10 @@ describe("GET /sectionInfo/:subject/:number", () => {
       seats_reserved_for: ["BSC in year: <=2"],
       building: "CU",
       room: "ICCS 69420",
-      num_credits: 3,
+      num_credits: "3",
       course_avg: 69,
       prof_rating: 4.20,
-      link: "cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
+      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
 
     
@@ -218,10 +221,14 @@ describe("GET /section/:subject/:number", () => {
     expect(result.status).toEqual(200);
 
     const lectSection1: Section = {
-      section_name: "101",
+      name: "CPSC 221 101",
+      subject: "CPSC",
+      number: 221,
+      section: "101",
       status: "Full",
-      endpoint: "/course/CPSC/221/101",
-      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101"
+      endpoint: "/sectionInfo/CPSC/221/101",
+      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
+      term: 1
     }
     expect(result.status).toEqual(200);
     expect(result.body.sections).toContainEqual(lectSection1);

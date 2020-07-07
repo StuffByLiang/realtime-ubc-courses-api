@@ -6,9 +6,10 @@ export default interface SectionInfo {
     number: number,
     section: string,
     textbooks: Array<string>;
-    pre_reqs: Array<Course>;
+    pre_reqs?: Array<Array<Course>>;
     prof: string; 
-    term: number; 
+    term: number;
+    year: number;
     days: Array<string>; 
     start_time: string; 
     end_time: string; 
@@ -21,7 +22,7 @@ export default interface SectionInfo {
     seats_reserved_for: Array<string>;
     building: string;
     room: string;
-    num_credits: number;
+    num_credits: string;
     course_avg?: number; 
     prof_rating?: number;
     link: string; 

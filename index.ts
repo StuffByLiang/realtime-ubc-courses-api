@@ -2,7 +2,7 @@ import express from 'express';
 import course from './src/routes/courseRoutes';
 import section from './src/routes/sectionRoutes';
 import sectionInfo from './src/routes/sectionInfoRoutes';
-import { CourseScraper } from './src/util/CourseScraper';
+import CourseScraper from './src/util/CourseScraper';
 
 const app = express();
 
