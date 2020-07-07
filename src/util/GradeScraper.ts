@@ -70,11 +70,11 @@ export default class GradeScraper {
         urlArray.push(url3);
         urlArray.push(url4);
 
-        let jsonArray: Array<any> = [];
+        let jsonArray: Array<GradeInfo> = [];
 
         for (let i = 0; i < urlArray.length; i++) {
-            const jsonObject: any =  await this.getSiteHtml(urlArray[i]);
-            if (jsonObject !== {}) {
+            const jsonObject: GradeInfo =  await this.getSiteHtml(urlArray[i]);
+            if (Object.keys(jsonObject).length !== 0 && jsonObject.constructor === Object) {
                 jsonArray.push(jsonObject);
             }
         }

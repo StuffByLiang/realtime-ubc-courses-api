@@ -80,7 +80,7 @@ export default class Parser {
       building: building,
       room: room, 
       num_credits: $('body > div.container > div.content.expand > p:nth-child(7)').text().split(" ")[2],
-      // course_avg: await this.gradeScraper.getSectionAverage("W", subject, number, section, 2020),
+      course_avg: await this.gradeScraper.getSectionAverage("W", subject, number, section, 2020),
       prof_rating: null,
       link: `/cs/courseschedule?pname=subjarea&tname=subj-section&dept=${subject}&course=${number}&section=${section}`
     }
