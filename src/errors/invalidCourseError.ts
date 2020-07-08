@@ -3,12 +3,13 @@
  * throw new InvalidCourseError(message)
  * throw new InvalidCourseError()
  */
-class InvalidCourseError extends Error {
+class invalidCourseError extends Error {
   
   /**
-   * @param {string} message ="CourseNotfound"
+   * @param {string} message ="Course Not Found"
    */
-  constructor(message = "Course Not found") {
+  constructor(message = "Course Not Found") {
     super(message);
   }
 }
+export default invalidCourseError; 

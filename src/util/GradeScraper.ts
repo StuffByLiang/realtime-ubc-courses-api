@@ -3,6 +3,8 @@ import Section from "../models/section";
 import Course from "../models/course";
 import CourseScraper from "./CourseScraper";
 import GradeInfo from "../models/gradeInfo";
+import noAveragePossibleError from "../errors/noAveragePossibleError";
+import { json } from "express";
 
 /**
  * High level class that parses the grades for a specific course section
@@ -32,7 +34,9 @@ export default class GradeScraper {
     
     /**
      * 
-     * Returns the average of the last 4 sessions that are of the same type as the given session
+     * Returns the average of the last 4 sessions that are of the same type as the given session, or throws a noAveragePossibleError 
+     * if data is not available for the course or it doesn't exist 
+     * e.g. exception is thrown if we try to get the average for /W/CPSC/221/169
      * //TODO: Open for change
      * 
      *  - e.g. If the user specifies a Winter Session, then it will return the average of the previous 4 Winter sessions
@@ -78,6 +82,14 @@ export default class GradeScraper {
                 jsonArray.push(jsonObject);
             }
         }
+        console.log(jsonArray); 
+        
+        let counter  = 0; 
+        for(let i = 0; i < jsonArray.length; i++) {
+            if(Object.keys(jsonArray[i]).length === 0) counter++;
+        }
+        if(counter == 4) throw new noAveragePossibleError();    // if we cant get any average data from the course. 
+
 
         let averageArray: Array<number> = [];
         
