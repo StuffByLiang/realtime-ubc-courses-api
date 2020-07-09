@@ -25,8 +25,6 @@ router.get("/:subject/:number", async (req, res) => {
     res.status(404).send(invalidCourseError.message);
     console.log("invalid department code or course number"); 
   }
-
-  
 });
 
 //testing grade scraper - fuck lol 
