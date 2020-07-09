@@ -16,11 +16,13 @@ router.get("/:subject", async (req, res) => {
     res.json({
       courses: courses
     });
-  } catch {
-    res.status(404).send("course not found");
+  } catch (invalidSubjectError) { 
+    res.status(404).send(invalidSubjectError.message);
     console.log("invalid department code"); 
   }
 });
+
+
 
 // router.get("/CPSC", (req, res) => {
 //   const cpsc221 : Course = {

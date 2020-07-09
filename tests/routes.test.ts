@@ -4,6 +4,7 @@ import request from "supertest";
 import Course from "../src/models/course";
 import Section from "../src/models/section";
 import SectionInfo from "../src/models/sectionInfo";
+import invalidSubjectError from "../src/errors/invalidSubjectError";
 
 describe("GET / - a simple api endpoint", () => {
   it("Hello API Request", async () => {
@@ -48,7 +49,7 @@ describe("GET /course/:subject", () => {
   it("fail invalid subject ", async () => {
     const result = await request(app).get("/course/LMAO");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("subject not found");
+    expect(result.text).toEqual("Subject Not Found");
   });
 });
 
@@ -120,13 +121,13 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
   it("fail invalid course number", async () => { 
     const result = await request(app).get("/sectionInfo/CPSC/69/420");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("course number not found");
+    expect(result.text).toEqual("Course Not found");
   });
 
   it("fail invalid section", async () => {  
     const result = await request(app).get("/sectionInfo/CPSC/221/69");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("section not found");
+    expect(result.text).toEqual("Section Not Found");
   });
 });
 
@@ -217,7 +218,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
 // test section.ts - Get ALL Sections (101,102,etc.) 
 describe("GET /section/:subject/:number", () => {
   it("SUCCESS :)", async () => {
-    const result = await request(app).get("/course/CPSC/221");
+    const result = await request(app).get("/section/CPSC/221");
     expect(result.status).toEqual(200);
 
     const lectSection1: Section = {
@@ -235,16 +236,16 @@ describe("GET /section/:subject/:number", () => {
     expect(result.body.sections.length).toBeGreaterThan(0);
   });
   
-  it("fail invalid subject", async () => {
+  it("fail invalid subject TODO", async () => {
     const result = await request(app).get("/section/LMAOSHIT/221");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("subject not found");
+    expect(result.text).toEqual("Course Not Found");
   });
 
-  it("fail invalid course number", async () => {
+  it("fail invalid course number TODO", async () => {
     const result = await request(app).get("/section/CPSC/69");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("course number not found");
+    expect(result.text).toEqual("Course Not Found");
   });
 });
 
