@@ -8,6 +8,14 @@ const app = express();
 
 const courseScraper = new CourseScraper()
 
+function isJestRunning() {
+    return process.env.JEST_WORKER_ID !== undefined;
+}
+
+const defaultPort = isJestRunning() ? 3001 : 3000;
+
+let port = process.env.port || defaultPort;
+
 // set up routes
 app.use('/course', course);
 app.use('/section', section);
@@ -33,7 +41,7 @@ app.get('/allsaints', (req, res) => {
     res.send("It's not an ocean it's a lake.");
 });
 
-const server = app.listen(3000, () => console.log('Course Scraper app listening on port 3000!'));  
+const server = app.listen(port, () => console.log('Course Scraper app listening on port 3000!'));  
 
 export {
     app,

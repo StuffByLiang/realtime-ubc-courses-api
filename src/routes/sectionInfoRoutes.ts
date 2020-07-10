@@ -17,7 +17,9 @@ router.get("/:subject/:number", async (req, res) => {
     const sectionInfo: Array<SectionInfo> = await courseScraper.getSectionInfoList(subject, number);
     res.json(sectionInfo);
   } catch (invalidCourseError) {
-    res.status(404).send("course not found");
+    res.status(404).send({
+      error: "course not found"
+    });
     console.log("invalid department code or course number"); 
   }
 });
@@ -31,7 +33,9 @@ router.get("/:subject/:number/:section", async (req, res) => {
     const sectionInfo: SectionInfo = await courseScraper.getSectionInfo(subject, number, section);
     res.json(sectionInfo);
    } catch (invalidSectionError) { 
-    res.status(404).send(invalidSectionError.message); 
+    res.status(404).send({
+      error: invalidSectionError.message
+    }); 
     console.log("invalid section for this course"); 
   }
 });
