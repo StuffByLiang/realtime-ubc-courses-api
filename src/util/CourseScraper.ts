@@ -95,30 +95,9 @@ export default class CourseScraper {
     }));
 
     return sectionInfoList;
-    // sectionList.forEach(async function(section: Section, index: number) {
-    //   const sectionInfoUrl: string = `https://courses.students.ubc.ca${section.link}`;
-    //   const sectionInfoHtml: string = await this.getSiteHtml(sectionInfoUrl);
-    //   const sectionInfo: SectionInfo = this.parseSectionHtml(sectionInfoHtml);
-    //   sectionInfoList.push(sectionInfo);
-    // })
-    // for (let i = 0; i < sectionList.length; i++) {
-    //   const sectionInfoUrl: string = `https://courses.students.ubc.ca${sectionList[i].link}`;
-    //   const sectionInfoHtml: string = await this.getSiteHtml(sectionInfoUrl);
-    //   const sectionInfo: SectionInfo = await this.parseSectionHtml(sectionInfoHtml);
-    //   sectionInfoList.push(sectionInfo);
-    // }
-    // getSectionList -> forEach(getSectionInfo) <-- run all asyncronously
   }
 
-  // async iterateOverSections(sectionInfoList: Array<SectionInfo>, sectionList: Array<Section>): Promise<Array<SectionInfo>> {
-  //   for (let i = 0; i < sectionList.length; i++) {
-  //     const sectionInfoUrl: string = `https://courses.students.ubc.ca${section.link}`;
-  //     const sectionInfoHtml: string = await this.getSiteHtml(sectionInfoUrl);
-  //     const sectionInfo: SectionInfo = await this.parseSectionHtml(sectionInfoHtml);
-  //     sectionInfoList.push(sectionInfo);
-  //   }
-  //   return sectionInfoList;
-  // }
+
   
   async parseSectionHtml(html: string): Promise<SectionInfo> {
     return await this.parser.parseSectionHtml(html);
