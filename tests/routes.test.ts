@@ -53,7 +53,7 @@ describe("GET /course/:subject", () => {
     const result = await request(app).get("/course/LMAO");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "subject not found"
+      error: "Subject Not Found"
     });
   });
 });
@@ -102,7 +102,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
     const result = await request(app).get("/sectionInfo/LMAOSHIT/221/420");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "subject not found"
+      error: "Section Not Found"
     });
   });
   
@@ -110,7 +110,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
     const result = await request(app).get("/sectionInfo/CPSC/69/420");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "course number not found"
+      error: "Section Not Found"
     });
   });
 
@@ -118,7 +118,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
     const result = await request(app).get("/sectionInfo/CPSC/221/69");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "section not found"
+      error: "Section Not Found"
     });
   });
 });
@@ -198,7 +198,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
     const result = await request(app).get("/sectionInfo/LMAOSHIT/221");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "subject not found"
+      error: "Course Not Found"
     });
   });
   
@@ -206,7 +206,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
     const result = await request(app).get("/sectionInfo/CPSC/69");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "course number not found"
+      error: "Course Not Found"
     });
   });
 });
@@ -242,7 +242,7 @@ describe("GET /section/:subject/:number", () => {
     const result = await request(app).get("/section/LMAOSHIT/221");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "subject not found"
+      error: "Course Not Found"
     });
   });
 
@@ -250,7 +250,7 @@ describe("GET /section/:subject/:number", () => {
     const result = await request(app).get("/section/CPSC/69");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
-      error: "course number not found"
+      error: "Course Not Found"
     });
   });
 });

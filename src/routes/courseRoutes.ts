@@ -17,7 +17,9 @@ router.get("/:subject", async (req, res) => {
       courses: courses
     });
   } catch (invalidSubjectError) { 
-    res.status(404).send(invalidSubjectError.message);
+    res.status(404).send({
+      error: invalidSubjectError.message
+    });
     console.log("invalid department code"); 
   }
 });
