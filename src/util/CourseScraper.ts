@@ -95,11 +95,22 @@ export default class CourseScraper {
    * @returns Promise         - Info for all of the sections offered for the course
    */
   async getSectionInfoList(subject: string, number: string): Promise<Array<SectionInfo>> {
-    //TODO 
-    return null; 
-    // getSectionList -> forEach(getSectionInfo) <-- run all asyncronously
-    // return sectionInfoList;
+    let sectionInfoList: Array<SectionInfo> = [];
+    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${number}`;
+    const html: string = await this.getSiteHtml(url);
+    const sectionList: Array<Section> = this.parseSectionListHtml(html);
+
+    await Promise.all(sectionList.map(async (section) => {
+      const sectionInfoUrl: string = `https://courses.students.ubc.ca${section.link}`;
+      const sectionInfoHtml: string = await this.getSiteHtml(sectionInfoUrl);
+      const sectionInfo: SectionInfo = await this.parseSectionHtml(sectionInfoHtml);
+      sectionInfoList.push(sectionInfo);
+    }));
+
+    return sectionInfoList;
   }
+
+
   
   async parseSectionHtml(html: string): Promise<SectionInfo> {
     return await this.parser.parseSectionHtml(html);
