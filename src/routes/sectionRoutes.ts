@@ -21,14 +21,12 @@ router.get("/:subject/:number", async (req, res) => {
     res.json({
       sections: sections
     });
-  } catch {
-    res.status(404).send("course not found");
-    console.log("invalid department code"); 
+  } catch (invalidCourseError) {
+    res.status(404).send({
+      error: invalidCourseError.message
+    });
+    console.log("invalid department code or course number"); 
   }
-
-  res.json({
-
-  });
 });
 
 //testing grade scraper - fuck lol 
@@ -43,10 +41,11 @@ router.get('/:term/:subject/:course/:section', async (req, res) => {
     res.json({
       average: average
     })
-  } catch(err) {
-    console.log(err)
-    res.status(404).send({"bruh that is tough": err.message });
-    console.log(":(");
+  } catch(noAveragePossibleError) {
+    res.status(404).send({
+      error: noAveragePossibleError.message
+    });
+    console.log("Cannot compute average from inputs");
   }
 })
 

@@ -4,6 +4,9 @@ import request from "supertest";
 import Course from "../src/models/course";
 import Section from "../src/models/section";
 import SectionInfo from "../src/models/sectionInfo";
+import invalidSubjectError from "../src/errors/invalidSubjectError";
+
+import "./customMatchers/index";
 
 describe("GET / - a simple api endpoint", () => {
   it("Hello API Request", async () => {
@@ -38,9 +41,10 @@ describe("GET /course/:subject", () => {
       subject: "CPSC",
       number: 221,
       title: "Basic Algorithms and Data Structures",
-      endpoint: "/course/CPSC/221/",
+      endpoint: "/section/CPSC/221/",
       link: "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221"
     };
+
     expect(result.body.courses).toContainEqual(cpsc221);
     expect(result.body.courses.length).toBeGreaterThan(0);
   });
@@ -48,7 +52,9 @@ describe("GET /course/:subject", () => {
   it("fail invalid subject ", async () => {
     const result = await request(app).get("/course/LMAO");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("subject not found");
+    expect(result.body).toMatchObject({
+      error: "Subject Not Found"
+    });
   });
 });
 
@@ -57,56 +63,37 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
   it("success", async () => {
     const result = await request(app).get("/sectionInfo/CPSC/100/101");
     
-    const exSection: SectionInfo = {
-      name: "CPSC 100 101",
+    const exSectionInfo: SectionInfo = {
+      name: "CPSC 100 101 (Web-Oriented Course)",
       subject: "CPSC",
       number: 100,
       section: "101",
-      textbooks: [],
-      pre_reqs: [],
-      prof: "Wong, Jessica",
+      textbooks: expect.any(Array),
+      pre_reqs: expect.any(Array),
+      prof: "WONG, JESSICA",
       term: 1,
       year: 2020,
       days: ["Tue", "Thu"],
       start_time: "15:30",
       end_time: "17:00", 
-      topic: "Computation Thinking",
-      description: "Meaning and impact of computational thinking Solving problems using computational thinking, testing, debugging. How computers work. No prior computing experience required. Not for students with existing credit for or exemption from CPSC 107, CPSC 1 ",
-      total_seats_remaining: 69420,
-      currently_registered: 69,
-      general_seats_remaining: 420,
-      restricted_seats_remaining: 42,
-      seats_reserved_for: ["BSC in year: <=2"],
-      building: "CU",
-      room: "ICCS 69420",
+      topic: "Computational Thinking",
+      description: "Meaning and impact of computational thinking. Solving problems using computational thinking, testing, debugging. How computers work. No prior computing experience required. Not for students with existing credit for or exemption from CPSC 107, CPSC 110 or APSC 160.",
+      total_seats_remaining: expect.any(Number),
+      currently_registered: expect.any(Number),
+      general_seats_remaining: expect.any(Number),
+      restricted_seats_remaining: expect.any(Number),
+      seats_reserved_for: expect.any(Array),
+      building: "online",
+      room: "online",
       num_credits: "3",
-      course_avg: 69,
-      prof_rating: 4.20,
+      course_avg: expect.any(Number),
+      prof_rating: expect.any(Number),
       link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
     
     expect(result.status).toEqual(200);
 
-    expect(result.body.textbooks).toContainEqual({
-      name: "textbookName" 
-    });
-    
-    expect(result.body.pre_reqs).toContainEqual({});
-    expect(result.body.term).toEqual(exSection.term);
-    expect(result.body.days).toEqual(exSection.days);
-    expect(result.body.start_time).toEqual(exSection.start_time);
-    expect(result.body.end_time).toEqual(exSection.end_time);
-    expect(result.body.topic).toEqual(exSection.topic);
-    expect(result.body.description).toEqual(exSection.description);
-    // expect(result.body.total_seats_remaining).toEqual(exSection.total_seats_remaining);
-    // expect(result.body.currently_registered.toEqual(exSection.currently_registered));
-    // expect(result.body.general_seats_remaining).toEqual(exSection.general_seats_remaining);
-    // expect(result.body.restricted_seats_remaining).toEqual(exSection.restricted_seats_remaining);
-    expect(result.body.seats_reserved_for).toEqual(exSection.seats_reserved_for);
-    expect(result.body.building).toEqual(exSection.building); 
-    // expect(result.body.course_avg).toEqual(exSection.course_avg); 
-    // expect(result.body.prof_rating).toEqual(exSection.prof_rating); 
-    expect(result.body.link).toEqual(exSection.link); 
+    expect(result.body).toMatchObject(exSectionInfo);
   });
   
   
@@ -114,19 +101,25 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
   it("fail invalid subject ", async () => {
     const result = await request(app).get("/sectionInfo/LMAOSHIT/221/420");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("subject not found");
+    expect(result.body).toMatchObject({
+      error: "Section Not Found"
+    });
   });
   
   it("fail invalid course number", async () => { 
     const result = await request(app).get("/sectionInfo/CPSC/69/420");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("course number not found");
+    expect(result.body).toMatchObject({
+      error: "Section Not Found"
+    });
   });
 
   it("fail invalid section", async () => {  
     const result = await request(app).get("/sectionInfo/CPSC/221/69");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("section not found");
+    expect(result.body).toMatchObject({
+      error: "Section Not Found"
+    });
   });
 });
 
@@ -137,27 +130,27 @@ describe("GET /sectionInfo/:subject/:number", () => {
     expect(result.status).toEqual(200);
     
     const exSection: SectionInfo = {
-      name: "CPSC 100 101",
+      name: "CPSC 100 101 (Web-Oriented Course)",
       subject: "CPSC",
       number: 100,
       section: "101",
       textbooks: [],
       pre_reqs: [],
-      prof: "Wong, Jessica",
+      prof: "WONG, JESSICA",
       term: 1,
       year: 2020,
       days: ["Tue", "Thu"],
       start_time: "15:30",
       end_time: "17:00", 
       topic: "Computation Thinking",
-      description: "Meaning and impact of computational thinking Solving problems using computational thinking, testing, debugging. How computers work. No prior computing experience required. Not for students with existing credit for or exemption from CPSC 107, CPSC 1 ",
+      description: "Meaning and impact of computational thinking. Solving problems using computational thinking, testing, debugging. How computers work. No prior computing experience required. Not for students with existing credit for or exemption from CPSC 107, CPSC 110 or APSC 160.",
       total_seats_remaining: 69420,
       currently_registered: 69,
       general_seats_remaining: 420,
       restricted_seats_remaining: 42,
       seats_reserved_for: ["BSC in year: <=2"],
-      building: "CU",
-      room: "ICCS 69420",
+      building: "online",
+      room: "online",
       num_credits: "3",
       course_avg: 69,
       prof_rating: 4.20,
@@ -195,56 +188,70 @@ describe("GET /sectionInfo/:subject/:number", () => {
     
     let sectionInfos = [exSection, exSection2];
     
-    expect(result.body.sectionInfos.length).toEqual(1); 
-    expect(result.body.sectionInfos).toContain(exSection);
-    expect(result.body.sectionInfos).not.toContain(exSection);
+    expect(result.body.sections.length).toBeGreaterThan(1); 
+    expect(result.body.sections).toContain(exSection);
+    expect(result.body.sections).not.toContain(exSection);
     
   });
 
   it("fail invalid subject ", async () => {
     const result = await request(app).get("/sectionInfo/LMAOSHIT/221");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("subject not found");
+    expect(result.body).toMatchObject({
+      error: "Course Not Found"
+    });
   });
   
   it("fail invalid course number", async () => { 
     const result = await request(app).get("/sectionInfo/CPSC/69");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("course number not found");
+    expect(result.body).toMatchObject({
+      error: "Course Not Found"
+    });
   });
 });
 
 // test section.ts - Get ALL Sections (101,102,etc.) 
 describe("GET /section/:subject/:number", () => {
   it("SUCCESS :)", async () => {
-    const result = await request(app).get("/course/CPSC/221");
+    const result = await request(app).get("/section/CPSC/221");
     expect(result.status).toEqual(200);
 
-    const lectSection1: Section = {
+    const section: Section = {
       name: "CPSC 221 101",
       subject: "CPSC",
       number: 221,
       section: "101",
-      status: "Full",
+      status: expect.any(String),
       endpoint: "/sectionInfo/CPSC/221/101",
       link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
       term: 1
     }
     expect(result.status).toEqual(200);
-    expect(result.body.sections).toContainEqual(lectSection1);
-    expect(result.body.sections.length).toBeGreaterThan(0);
+
+    expect(result.body.sections).toEqual( 
+      expect.arrayContaining([ 
+        expect.objectContaining(section)
+      ])
+    );
+
+    expect(result.body.sections.length).toBeGreaterThan(1);
   });
   
-  it("fail invalid subject", async () => {
+  it("fail invalid subject TODO", async () => {
     const result = await request(app).get("/section/LMAOSHIT/221");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("subject not found");
+    expect(result.body).toMatchObject({
+      error: "Course Not Found"
+    });
   });
 
-  it("fail invalid course number", async () => {
+  it("fail invalid course number TODO", async () => {
     const result = await request(app).get("/section/CPSC/69");
     expect(result.status).toEqual(404);
-    expect(result.text).toEqual("course number not found");
+    expect(result.body).toMatchObject({
+      error: "Course Not Found"
+    });
   });
 });
 

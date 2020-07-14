@@ -80,7 +80,7 @@ export default class Parser {
       building: building,
       room: room, 
       num_credits: $('body > div.container > div.content.expand > p:nth-child(7)').text().split(" ")[2],
-      // course_avg: await this.gradeScraper.getSectionAverage("W", subject, number, section, 2020),
+      course_avg: await this.gradeScraper.getSectionAverage("W", subject, number, section, 2020),
       prof_rating: null,
       link: `/cs/courseschedule?pname=subjarea&tname=subj-section&dept=${subject}&course=${number}&section=${section}`
     }
@@ -112,14 +112,15 @@ export default class Parser {
    * @returns Section
    */
   parseSectionTableRow(tableRow: Cheerio): Section {
+    let status = tableRow.children().first().text().trim();
       let s : Section = {
         name: tableRow.children().eq(1).text(),
         subject: tableRow.children().find("a").text().split(" ")[0],
         number: parseInt(tableRow.children().find("a").text().split(" ")[1]),
         section: tableRow.children().find("a").text().split(" ")[2].trim(), // L1A/101/T1A
-        status: tableRow.children().first().text().trim(),
+        status: status === "" ? "Available" : status,
         endpoint: "/sectionInfo/" + tableRow.find("a").text().split(" ")[0] +  "/"  + tableRow.find("a").text().split(" ")[1] + "/" +  
-        tableRow.find("a").text().split(" ")[2],       // "/course/CPSC/221/L1A",
+        tableRow.find("a").text().split(" ")[2].trim(),       // "/course/CPSC/221/L1A",
         link: tableRow.children().find("a").attr("href"),
         term: parseInt(tableRow.children().eq(3).text()),
       }
