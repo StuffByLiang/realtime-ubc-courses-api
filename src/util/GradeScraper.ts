@@ -1,7 +1,6 @@
 import SectionInfo from "../models/sectionInfo";
 import Section from "../models/section";
 import Course from "../models/course";
-import CourseScraper from "./CourseScraper";
 import GradeInfo from "../models/gradeInfo";
 import noAveragePossibleError from "../errors/noAveragePossibleError";
 import { json } from "express";
@@ -12,11 +11,6 @@ import { json } from "express";
 const axios = require('axios').default;
 
 export default class GradeScraper {
-    courseScraper: CourseScraper;
-
-    constructor() {
-        this.courseScraper = new CourseScraper();
-    }
     /**
      * Returns the html document of the webpage at the url as a string
      * 
@@ -34,7 +28,7 @@ export default class GradeScraper {
     
     /**
      * 
-     * Returns the average of the last 4 sessions that are of the same type as the given session, or throws a noAveragePossibleError 
+     * Returns the average of the last 4 sessions that are of the same type as the given session, or returns null 
      * if data is not available for the course or it doesn't exist 
      * e.g. exception is thrown if we try to get the average for /W/CPSC/221/169
      * //TODO: Open for change
@@ -82,14 +76,12 @@ export default class GradeScraper {
                 jsonArray.push(jsonObject);
             }
         }
-        console.log(jsonArray); 
         
         let counter  = 0; 
         for(let i = 0; i < jsonArray.length; i++) {
             if(Object.keys(jsonArray[i]).length === 0) counter++;
         }
-        if(counter == 4) throw new noAveragePossibleError();    // if we cant get any average data from the course. 
-
+        if(counter == 4) return null // if we cant get any average data from the course. 
 
         let averageArray: Array<number> = [];
         
