@@ -4,9 +4,22 @@ import request from "supertest";
 import Course from "../src/models/course";
 import Section from "../src/models/section";
 import SectionInfo from "../src/models/sectionInfo";
-import invalidSubjectError from "../src/errors/invalidSubjectError";
+import Subject from "../src/models/subject";
 
-import "./customMatchers/index";
+/**
+ * Returns element of array that contains a name equal to the given name. else return null. used to help for testing
+ * 
+ * @param  {string} nameKey
+ * @param  {Array<any>} myArray
+ */
+function search(nameKey: string, myArray: Array<any>) {
+  for (var i=0; i < myArray.length; i++) {
+      if (myArray[i].name === nameKey) {
+          return myArray[i];
+      }
+  }
+  return null;
+}
 
 describe("GET / - a simple api endpoint", () => {
   it("Hello API Request", async () => {
@@ -39,10 +52,13 @@ describe("GET /course/:subject", () => {
     const cpsc221 : Course = {
       name: "CPSC 221",
       subject: "CPSC",
-      number: 221,
+      course: "221",
       title: "Basic Algorithms and Data Structures",
-      endpoint: "/section/CPSC/221/",
-      link: "/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221"
+      description: "Design and analysis of basic algorithms and data structures; algorithm analysis methods, searching and sorting algorithms, basic data structures, graphs and concurrency.",
+      credits: 4,
+      comments: ["Choose one section from all 2 activity types. (e.g. Lecture and Laboratory)"],
+      endpoint: "/section/CPSC/221",
+      link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221"
     };
 
     expect(result.body.courses).toContainEqual(cpsc221);
@@ -66,29 +82,27 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
     const exSectionInfo: SectionInfo = {
       name: "CPSC 100 101 (Web-Oriented Course)",
       subject: "CPSC",
-      number: 100,
+      course: "100",
       section: "101",
       textbooks: expect.any(Array),
-      pre_reqs: expect.any(Array),
+      // pre_reqs: expect.any(Array),
       prof: "WONG, JESSICA",
-      term: 1,
-      year: 2020,
+      term: "1",
+      year: "2020",
       days: ["Tue", "Thu"],
       start_time: "15:30",
       end_time: "17:00", 
-      topic: "Computational Thinking",
-      description: "Meaning and impact of computational thinking. Solving problems using computational thinking, testing, debugging. How computers work. No prior computing experience required. Not for students with existing credit for or exemption from CPSC 107, CPSC 110 or APSC 160.",
       total_seats_remaining: expect.any(Number),
       currently_registered: expect.any(Number),
       general_seats_remaining: expect.any(Number),
       restricted_seats_remaining: expect.any(Number),
       seats_reserved_for: expect.any(Array),
-      building: "online",
-      room: "online",
-      num_credits: "3",
+      building: "",
+      room: "",
+      credits: "3",
       course_avg: expect.any(Number),
-      prof_rating: expect.any(Number),
-      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
+      // prof_rating: expect.anything(),
+      link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
     
     expect(result.status).toEqual(200);
@@ -129,48 +143,44 @@ describe("GET /sectionInfo/:subject/:number", () => {
     const result = await request(app).get("/sectionInfo/CPSC/100");
     expect(result.status).toEqual(200);
     
-    const exSection: SectionInfo = {
+    const section: SectionInfo = {
       name: "CPSC 100 101 (Web-Oriented Course)",
       subject: "CPSC",
-      number: 100,
+      course: "100",
       section: "101",
       textbooks: [],
-      pre_reqs: [],
+      // pre_reqs: [],
       prof: "WONG, JESSICA",
-      term: 1,
-      year: 2020,
+      term: "1",
+      year: "2020",
       days: ["Tue", "Thu"],
       start_time: "15:30",
       end_time: "17:00", 
-      topic: "Computation Thinking",
-      description: "Meaning and impact of computational thinking. Solving problems using computational thinking, testing, debugging. How computers work. No prior computing experience required. Not for students with existing credit for or exemption from CPSC 107, CPSC 110 or APSC 160.",
-      total_seats_remaining: 69420,
-      currently_registered: 69,
-      general_seats_remaining: 420,
-      restricted_seats_remaining: 42,
-      seats_reserved_for: ["BSC in year: <=2"],
-      building: "online",
-      room: "online",
-      num_credits: "3",
-      course_avg: 69,
-      prof_rating: 4.20,
-      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
+      total_seats_remaining: expect.any(Number),
+      currently_registered: expect.any(Number),
+      general_seats_remaining: expect.any(Number),
+      restricted_seats_remaining: expect.any(Number),
+      seats_reserved_for: ["in one of these programs: BSC\nin year: <=2"],
+      building: "",
+      room: "",
+      credits: "3",
+      prof_rating: null, // TODO:
+      // prof_rating: expect.anything(),
+      link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
-    const exSection2: SectionInfo = {
+    const section2: SectionInfo = {
       name: "CPSC 69 420",
       subject: "CPSC",
-      number: 69,
+      course: "69",
       section: "420",
       textbooks: [" 600 dollar book"],
       pre_reqs: [],
       prof: "Belleville, Patrice",
-      term: 1,
-      year: 2020,
+      term: "1",
+      year: "2020",
       days: ["Mon"],
       start_time: "23:30",
       end_time: "17:00", 
-      topic: "Thinking Computationally",
-      description: "Wine tasting",
       total_seats_remaining: 1003,
       currently_registered: 2,
       general_seats_remaining: 3,
@@ -178,19 +188,18 @@ describe("GET /sectionInfo/:subject/:number", () => {
       seats_reserved_for: ["BSC in year: <=2"],
       building: "CU",
       room: "ICCS 69420",
-      num_credits: "3",
+      credits: "3",
       course_avg: 69,
       prof_rating: 4.20,
-      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
+      link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
 
-    
-    
-    let sectionInfos = [exSection, exSection2];
-    
-    expect(result.body.sections.length).toBeGreaterThan(1); 
-    expect(result.body.sections).toContain(exSection);
-    expect(result.body.sections).not.toContain(exSection);
+    expect(result.body.length).toBeGreaterThan(1); 
+    expect(result.body).not.toContain(section2);
+
+    const actualSection = search("CPSC 100 101 (Web-Oriented Course)", result.body);
+    expect(actualSection).toBeTruthy();
+    expect(actualSection).toMatchObject(section);
     
   });
 
@@ -218,14 +227,20 @@ describe("GET /section/:subject/:number", () => {
     expect(result.status).toEqual(200);
 
     const section: Section = {
+      status: expect.any(String),
       name: "CPSC 221 101",
       subject: "CPSC",
-      number: 221,
+      course: "221",
       section: "101",
-      status: expect.any(String),
+      activity: "Web-Oriented Course",
+      term: "1",
+      interval: "",
+      days: ["Mon", "Wed", "Fri"],
+      start_time: "14:00",
+      end_time: "15:00",
+      comments: "If all the lab and/or tutorial seats are full the department will ensure that there are enough lab/tutorial seats available for the number of students registered in the course by either adding additional lab/tutorial sections or expenadind the number of seats in the activity once we know how many extra students we will need to accommodate. However, there is no guarantee that these seats will fit your preferred time.  You may need to change your registration in other courses to get access to a lab/tutorial where there are available seats.",
+      link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
       endpoint: "/sectionInfo/CPSC/221/101",
-      link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
-      term: 1
     }
     expect(result.status).toEqual(200);
 
@@ -252,6 +267,31 @@ describe("GET /section/:subject/:number", () => {
     expect(result.body).toMatchObject({
       error: "Course Not Found"
     });
+  });
+});
+
+// test subject
+describe("GET /subject", () => {
+  it("SUCCESS :)", async () => {
+    const result = await request(app).get("/subject");
+    expect(result.status).toEqual(200);
+
+    const subject: Subject ={
+      subject: "CPSC",
+      title: "Computer Science",
+      faculty: "Faculty of Science",
+      endpoint: "/course/CPSC",
+      link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-department&dept=CPSC",
+      hasCourses: true
+    }
+    expect(result.status).toEqual(200);
+
+    expect(result.body.subjects).toEqual( 
+      expect.arrayContaining([ 
+        expect.objectContaining(subject)
+      ])
+    );
+    expect(result.body.subjects.length).toBeGreaterThan(1);
   });
 });
 

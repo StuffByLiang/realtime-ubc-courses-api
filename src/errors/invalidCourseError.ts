@@ -3,8 +3,7 @@
  * throw new InvalidCourseError(message)
  * throw new InvalidCourseError()
  */
-class invalidCourseError extends Error {
-  
+export class InvalidCourseError extends Error {
   /**
    * @param {string} message ="Course Not Found"
    */
@@ -12,4 +11,3 @@ class invalidCourseError extends Error {
     super(message);
   }
 }
-export default invalidCourseError; 

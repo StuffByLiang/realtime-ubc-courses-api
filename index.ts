@@ -1,8 +1,10 @@
 import express from 'express';
-import course from './src/routes/courseRoutes';
-import section from './src/routes/sectionRoutes';
-import sectionInfo from './src/routes/sectionInfoRoutes';
+import courseRoutes from './src/routes/courseRoutes';
+import sectionRoutes from './src/routes/sectionRoutes';
+import sectionInfoRoutes from './src/routes/sectionInfoRoutes';
+import subjectRoutes from './src/routes/subjectRoutes';
 import CourseScraper from './src/util/CourseScraper';
+import { CoursePageScraper } from './src/util/scraper';
 
 const app = express();
 
@@ -17,9 +19,10 @@ const defaultPort = isJestRunning() ? 3001 : 3000;
 let port = process.env.port || defaultPort;
 
 // set up routes
-app.use('/course', course);
-app.use('/section', section);
-app.use('/sectionInfo', sectionInfo);
+app.use('/course', courseRoutes);
+app.use('/section', sectionRoutes);
+app.use('/sectionInfo', sectionInfoRoutes);
+app.use('/subject', subjectRoutes);
 
 app.get('/', (req, res) => {
     res.send('An alligator approaches!');
@@ -39,6 +42,10 @@ app.use((req, res, next) => {
 
 app.get('/allsaints', (req, res) => {
     res.send("It's not an ocean it's a lake.");
+});
+
+app.get('/test', async (req, res) => {
+    res.json(await (new CoursePageScraper()).getData("CPSC", "221"));
 });
 
 const server = app.listen(port, () => console.log('Course Scraper app listening on port 3000!'));  

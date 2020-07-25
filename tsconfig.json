@@ -3,19 +3,20 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
+    "outDir": "./dist",
+    "baseUrl": "./",
     "paths": {
-      "*": [
-        "node_modules/*"
-      ]
+      "src/*": [
+        "./src/*"
+      ],
     }
   },
   "include": [  
-    "src/**/*", "index.ts"
+    "src/**/*.ts", "index.ts", "tests/**/*"
   ],
   
 }

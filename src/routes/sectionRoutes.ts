@@ -33,7 +33,7 @@ router.get("/:subject/:number", async (req, res) => {
 router.get('/:term/:subject/:course/:section', async (req, res) => {
   const term = req.params.term;
   const subject = req.params.subject;
-  const course = parseInt(req.params.course);
+  const course = req.params.course;
   const section = req.params.section;
 
   try {
@@ -48,23 +48,5 @@ router.get('/:term/:subject/:course/:section', async (req, res) => {
     console.log("Cannot compute average from inputs");
   }
 })
-
-router.get('/CPSC/221', (req, res) => {
-  const lectSection1: Section = {
-    name: "CPSC 221 101",
-    subject: "CPSC",
-    number: 221,
-    section: "101",
-    status: "Full",
-    endpoint: "/course/CPSC/221/101",
-    link: "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
-    term: 1
-  }
-  res.json({
-    sections: [
-      lectSection1
-    ]
-  })
-});
 
 export default router; 

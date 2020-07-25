@@ -1,39 +1,24 @@
 import SectionInfo from "../models/sectionInfo";
 import Section from "../models/section";
 import Course from "../models/course";
-import Parser from "./Parser";
-import invalidSubjectError from "../errors/invalidSubjectError";
-import invalidSectionError from "../errors/invalidSectionError";
-import invalidCourseError from "../errors/invalidCourseError";
+import Subject from "../models/subject";
+import { BrowseSubjectsPageScraper, CoursePageScraper, SectionPageScraper, SubjectPageScraper } from "./scraper";
+import { CourseTableRow, SectionPageData, SectionTableRow, SubjectTableRow } from "../models/pages";
+import GradeScraper from "./GradeScraper";
+import { InvalidSubjectError, InvalidCourseError, InvalidSectionError } from "../errors";
+
 /**
  * high level class that parses course and section information from urls 
  */
 const axios = require('axios').default;
 
 export default class CourseScraper {
-  parser: Parser;
-
-  constructor() {
-    this.parser = new Parser();
-  }
-
-  /**
-   * sends a request to the url and gets the entire html as a string
-   * 
-   * @param  {string} url - link to the webpage
-   * @returns string      - webpage html document as string
-   * 
-   * @example
-   * getSiteContent("https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101")
-   */
-  async getSiteHtml(url: string): Promise<string> {
-    try {
-      let res = await axios.get(url);
-      return res.data;
-    } catch (error) {
-      console.error(error)
-    }
-  } 
+  browseSubjectsPageScraper = new BrowseSubjectsPageScraper()
+  coursePageScraper = new CoursePageScraper()
+  sectionPageScraper = new SectionPageScraper()
+  subjectPageScraper = new SubjectPageScraper()
+  gradeScraper = new GradeScraper()
+  
   /**
    * Returns all of the courses for a specific department, or throws an invalidSubjectError if the courses list is empty
    * 
@@ -41,89 +26,120 @@ export default class CourseScraper {
    * @returns Promise         - Courses offered in the Department
    */
   async getCourseList(subject: string): Promise<Array<Course>> {
-    //https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=121
-    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-department&dept=${subject}`;
-    const html: string = await this.getSiteHtml(url);
+    // grab all courses from the subjects page
+    const subjectPageData = await this.subjectPageScraper.getData(subject);
 
-    const courses: Array<Course> = this.parseCourseListHtml(html);
+    const courses: Array<Course> = [];
+    
+    // for all courses, grab the title description and credits from their course page asynchronously
+    await Promise.all(
+      subjectPageData.courses.map(async (courseTableRow: CourseTableRow) => {
+        const { name, subject, course, title, link } = courseTableRow; // destructuring the object
+        const { description, credits, comments } = await this.coursePageScraper.getData(subject, course);
+
+        courses.push({
+          name,
+          subject,
+          course,
+          title,
+          link,
+
+          description,
+          credits: parseInt(credits),
+          comments,
+          endpoint: `/section/${subject}/${course}`,
+        });
+      })
+    );
+
     if(courses.length === 0) {
-      throw new invalidSubjectError(); 
+      throw new InvalidSubjectError(); 
     }
     return courses;
   }
   
-  // talked about this on discord 
-  /**
+   /**
    * Returns all of the info for the specified course section, or throws an invalidSectionError either
    * if section is not found for this course or
-   * course name or number is invalid 
+   * course name or course is invalid 
    * 
    * @param  {string} subject - Department Code
-   * @param  {string} number  - Course #
+   * @param  {string} course  - Course #
    * @param  {string} section - Course section #
    * @returns Promise         - Section Info
    */
-  async getSectionInfo(subject: string, number: string, section: string): Promise<SectionInfo> {
-    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=${subject}&course=${number}&section=${section}`;
-    const html: string = await this.getSiteHtml(url);
-    const sectionInfo: SectionInfo = await this.parseSectionHtml(html);
-    if(sectionInfo.name == "") {  //if the section name is blank it means that the section doesn't exist. 
-      throw new invalidSectionError(); 
+  async getSectionInfo(subject: string, course: string, section: string): Promise<SectionInfo> {
+    const sectionPageData: SectionPageData = await this.sectionPageScraper.getData(subject, course, section);
+    
+    if(sectionPageData.name == "") {  //if the section name is blank it means that the section doesn't exist. 
+      throw new InvalidSectionError(); 
     }
-    return sectionInfo;
+    // TODO: add prof_rating
+
+    return {
+      ...sectionPageData,
+      course_avg: await this.gradeScraper.getSectionAverage("W", subject, course, section, parseInt(sectionPageData.year)),
+      prof_rating: null,
+    };
   }
+
   /**
-   * Returns all of the Sections for the specified course, or throws an invalidCourseError if dept code + course number does not exist
+   * Returns all of the Sections for the specified course, or throws an invalidCourseError if dept code + course course does not exist
    * e.g. throws an invalidCourseError if getSectionList is called on CPSC 1
    * @param  {string} subject - Department Code
-   * @param  {string} number  - Course #
+   * @param  {string} course  - Course #
    * @returns Promise         - Sections offered for the course
    */
-  async getSectionList(subject: string, number: string): Promise<Array<Section>> {
-    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${number}`;
-    const html: string = await this.getSiteHtml(url);
-    const sectionList: Array<Section> = this.parseSectionListHtml(html);
-    if(sectionList.length === 0) throw new invalidCourseError(); 
+  async getSectionList(subject: string, course: string): Promise<Array<Section>> {
+    const coursePageData = await this.coursePageScraper.getData(subject, course);
+
+    if(coursePageData.sections.length === 0) {
+      throw new InvalidCourseError();
+    }
+
+    const sectionList: Array<Section> = coursePageData.sections.map((sectionTableRow: SectionTableRow): Section => {
+      const { section } = sectionTableRow;
+      return {
+        ...sectionTableRow,
+        endpoint: `/sectionInfo/${subject}/${course}/${section}`
+      }
+    });
     return sectionList;
   }
+
   /**
    * Returns all of the SectionInfo for each section in a course or throws an invalidCourseError if dept code + course number does not exist
    * e.g. throws an invalidCourseError if getSectionList is called on CPSC 1
    * 
    * @param  {string} subject - Department Code
-   * @param  {string} number  - Course #
+   * @param  {string} course  - Course #
    * @returns Promise         - Info for all of the sections offered for the course
    */
-  async getSectionInfoList(subject: string, number: string): Promise<Array<SectionInfo>> {
+  async getSectionInfoList(subject: string, course: string): Promise<Array<SectionInfo>> {
     let sectionInfoList: Array<SectionInfo> = [];
-    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${number}`;
-    const html: string = await this.getSiteHtml(url);
-    const sectionList: Array<Section> = this.parseSectionListHtml(html);
+    const sectionList: Array<Section> = await this.getSectionList(subject, course);
 
     await Promise.all(sectionList.map(async (section) => {
-      const sectionInfoUrl: string = `https://courses.students.ubc.ca${section.link}`;
-      const sectionInfoHtml: string = await this.getSiteHtml(sectionInfoUrl);
-      const sectionInfo: SectionInfo = await this.parseSectionHtml(sectionInfoHtml);
+      const sectionInfo: SectionInfo = await this.getSectionInfo(section.subject, section.course.toString(), section.section);
       sectionInfoList.push(sectionInfo);
     }));
 
     return sectionInfoList;
   }
 
-
-  
-  async parseSectionHtml(html: string): Promise<SectionInfo> {
-    return await this.parser.parseSectionHtml(html);
+  /**
+   * Returns all of the subjects at UBC
+   * @returns Promise         - Info for all of the subjects offered at UBC
+   */
+  async getSubjectList(): Promise<Array<Subject>> {
+    const browseSubjectsPageData = await this.browseSubjectsPageScraper.getData();
+    const subjectList: Array<Subject> = browseSubjectsPageData.subjects.map((subjectTableRow: SubjectTableRow): Subject => {
+      const { subject } = subjectTableRow;
+      return {
+        ...subjectTableRow,
+        endpoint: `/course/${subject}`
+      }
+    });
+    return subjectList;
   }
-  parseSectionListHtml(html: string): Array<Section> {
-    return this.parser.parseSectionListHtml(html);
-  }
-
-  parseCourseListHtml(html: string): Array<Course> {
-    return this.parser.parseCourseListHtml(html);
-  }
-  // parseCourse(html: string): Course {
-  //   return this.parser.parseCourse(html); 
-  // }
-  
 }

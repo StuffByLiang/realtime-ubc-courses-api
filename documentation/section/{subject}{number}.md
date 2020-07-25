@@ -24,78 +24,59 @@ eg CPSC 221 101
 
 ```json
 {
-    "lect_sections": [
-      {
-        "name"    : "CPSC 221 101",
-        "subject" : "CPSC",
-        "number"  : 221,
-        "section" : "101", 
-        "status"  : "Full", 
-        "endpoint": "/course/CPSC/221/101",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
-        "term"    : 1
-      }, 
-      {
-        "name"    : "CPSC 221 102",
-        "subject" : "CPSC",
-        "number"  : 221,
-        "section" : "102", 
-        "status"  : "Available", 
-        "endpoint": "/course/CPSC/221/102",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=102",
-        "term"    : 1
-      }, 
-    ],
-    "lab_sections": [
-      {
-        "name"    : "CPSC 221 L1A",
-        "subject" : "CPSC",
-        "number"  : 221,
-        "section" : "L1A", 
-        "status"  : "Full", 
-        "endpoint": "/course/CPSC/221/L1A",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=L1A", 
-        "term"    : 1
-      },
-    ],
-    "tutorial_sections": [
-      {
-        "name"    : "CPSC 221 T1A",
-        "subject" : "CPSC",
-        "number"  : 221,
-        "section" : "T1A", 
-        "status"  : "Full", 
-        "endpoint": "/course/CPSC/221/T1A",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=T1A",
-        "term"    : 1
-      }, 
-      {
-        "name"    : "CPSC 221 T1B",
-        "subject" : "CPSC",
-        "number"  : 221,
-        "section" : "T1B", 
-        "status"  : "Available", 
-        "endpoint": "/course/CPSC/221/T1B",
-        "link"    : "/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=T1B",
-        "term"    : 1
-      }
+    "sections": [
+       {
+            "status": "Restricted",
+            "name": "CPSC 221 101",
+            "subject": "CPSC",
+            "course": "221",
+            "section": "101",
+            "activity": "Web-Oriented Course",
+            "term": "1",
+            "interval": "",
+            "days": [
+                "Mon",
+                "Wed",
+                "Fri"
+            ],
+            "start_time": "14:00",
+            "end_time": "15:00",
+            "comments": "If all the lab and/or tutorial seats are full the department will ensure that there are enough lab/tutorial seats available for the number of students registered in the course by either adding additional lab/tutorial sections or expenadind the number of seats in the activity once we know how many extra students we will need to accommodate. However, there is no guarantee that these seats will fit your preferred time.  You may need to change your registration in other courses to get access to a lab/tutorial where there are available seats.",
+            "link": "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
+            "endpoint": "/sectionInfo/CPSC/221/101"
+        },
+        {
+            "status": "Full",
+            "name": "CPSC 221 L1A",
+            "subject": "CPSC",
+            "course": "221",
+            "section": "L1A",
+            "activity": "Laboratory",
+            "term": "1",
+            "interval": "",
+            "days": [
+                "Tue"
+            ],
+            "start_time": "11:00",
+            "end_time": "13:00",
+            "comments": "",
+            "link": "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=L1A",
+            "endpoint": "/sectionInfo/CPSC/221/L1A"
+        },
     ]
 }
 ```
 
 ## Error Responses
 
-**Condition** : If the departmentCode is not found
+**Condition** : If the departmentCode or number is not found
 
 **Code** : `404 NOT FOUND`
 
 **Content** :
 ```json
 {
-  "error": "subject not found"
-}
-{
-  "error": "course number not found"
+  "error": "Course Not Found"
 }
 ```
 
