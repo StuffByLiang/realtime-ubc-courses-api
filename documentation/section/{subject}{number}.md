@@ -85,17 +85,14 @@ eg CPSC 221 101
 
 ## Error Responses
 
-**Condition** : If the departmentCode is not found
+**Condition** : If the departmentCode or number is not found
 
 **Code** : `404 NOT FOUND`
 
 **Content** :
 ```json
 {
-  "error": "subject not found"
-}
-{
-  "error": "course number not found"
+  "error": "course not found"
 }
 ```
 

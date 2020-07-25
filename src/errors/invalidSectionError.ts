@@ -3,7 +3,7 @@
  * throw new invalidSectionError(message)
  * throw new invalidSectionError()
  */
-class invalidSectionError extends Error {
+export class InvalidSectionError extends Error {
   
     /**
      * @param {string} message ="Section Not Found"
@@ -12,4 +12,3 @@ class invalidSectionError extends Error {
       super(message);
     }
   }
-  export default invalidSectionError; 

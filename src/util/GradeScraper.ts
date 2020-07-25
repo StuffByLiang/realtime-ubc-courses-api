@@ -1,9 +1,4 @@
-import SectionInfo from "../models/sectionInfo";
-import Section from "../models/section";
-import Course from "../models/course";
 import GradeInfo from "../models/gradeInfo";
-import noAveragePossibleError from "../errors/noAveragePossibleError";
-import { json } from "express";
 
 /**
  * High level class that parses the grades for a specific course section
@@ -42,7 +37,7 @@ export default class GradeScraper {
      * @param  {string} course  // course number
      * @param  {string} section
      */
-    async getSectionAverage(term: string, subject: string, course: number, section: string, year: number): Promise<number> {
+    async getSectionAverage(term: string, subject: string, course: string, section: string, year: number): Promise<number> {
 
         // Lowkey can't get the average of the previous year since 2019W counts for both the Fall & Winter Term
 

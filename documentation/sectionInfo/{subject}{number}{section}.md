@@ -89,7 +89,6 @@ eg CPSC 221 101
   "seats_reserved_for": [
     "BUCC",
     "BUCCS"
-    //etc
   ],
   "building": "collaborate ultra",
   "room": "collaborate ultra room 4",
@@ -102,23 +101,11 @@ eg CPSC 221 101
 
 ## Error Responses
 
-**Condition** : If the course is not found
+**Condition** : If the section is not found
 
 **Code** : `404 NOT FOUND`
 
 **Content** :
-```json
-{
-  "error": "subject not found"
-}
-```
-or
-```json
-{
-  "error": "course number not found"
-}
-```
-or
 ```json
 {
   "error": "section not found"

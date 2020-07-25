@@ -18,7 +18,7 @@ router.get("/:subject/:number", async (req, res) => {
     res.json(sectionInfo);
   } catch (invalidCourseError) {
     res.status(404).send({
-      error: "course not found"
+      error: invalidCourseError.message
     });
     console.log("invalid department code or course number"); 
   }

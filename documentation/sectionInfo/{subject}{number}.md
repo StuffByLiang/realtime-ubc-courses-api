@@ -46,13 +46,7 @@ see [GET sectionInfo/:subject/:number/:section]({subject}{number}{section}.md)
 **Content** :
 ```json
 {
-  "error": "subject not found"
-}
-```
-or
-```json
-{
-  "error": "course number not found"
+  "error": "course not found"
 }
 ```
 

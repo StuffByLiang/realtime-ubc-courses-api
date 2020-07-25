@@ -7,6 +7,7 @@ features that are nice to have:
 - return courses that are available in a certain time frame
 
 Essential features:
+* [retrieve all subject codes](subject/index.md) : `GET /subject`
 * [retrieve course/section info](sectionInfo/{subject}{number}{section}.md) : `GET /sectionInfo/{subject}/{number}/{section}`
 * [retrieve course/section info](sectionInfo/{subject}{number}.md) : `GET /sectionInfo/{subject}/{number}`
 * [retrieve all courses in a subject](course/{subject}.md) : `GET /course/{subject}`
