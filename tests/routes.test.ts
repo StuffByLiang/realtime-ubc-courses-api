@@ -1,10 +1,10 @@
 import {app, server} from "../index";
 import request from "supertest";
 
-import Course from "../src/models/course";
-import Section from "../src/models/section";
-import SectionInfo from "../src/models/sectionInfo";
-import Subject from "../src/models/subject";
+import {Course} from "../src/models/course";
+import {Section} from "../src/models/section";
+import {SectionInfo} from "../src/models/sectionInfo";
+import {Subject} from "../src/models/subject";
 
 /**
  * Returns element of array that contains a name equal to the given name. else return null. used to help for testing

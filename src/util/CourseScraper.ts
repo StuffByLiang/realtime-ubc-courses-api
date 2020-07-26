@@ -1,11 +1,8 @@
-import SectionInfo from "../models/sectionInfo";
-import Section from "../models/section";
-import Course from "../models/course";
-import Subject from "../models/subject";
 import { BrowseSubjectsPageScraper, CoursePageScraper, SectionPageScraper, SubjectPageScraper } from "./scraper";
 import { CourseTableRow, SectionPageData, SectionTableRow, SubjectTableRow } from "../models/pages";
 import GradeScraper from "./GradeScraper";
 import { InvalidSubjectError, InvalidCourseError, InvalidSectionError } from "../errors";
+import { Course, SectionInfo, Section, Subject } from "src/models";
 
 /**
  * high level class that parses course and section information from urls 

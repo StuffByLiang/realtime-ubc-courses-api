@@ -1,4 +1,4 @@
-export default interface GradeInfo {
+export interface GradeInfo {
   grades: {
     "0-9%": number,
     "10-19%": number,

@@ -1,4 +1,7 @@
 import express from 'express';
+import mongoose from "mongoose"
+import dotenv from "dotenv";
+
 import courseRoutes from './src/routes/courseRoutes';
 import sectionRoutes from './src/routes/sectionRoutes';
 import sectionInfoRoutes from './src/routes/sectionInfoRoutes';
@@ -6,9 +9,27 @@ import subjectRoutes from './src/routes/subjectRoutes';
 import CourseScraper from './src/util/CourseScraper';
 import { CoursePageScraper } from './src/util/scraper';
 
-const app = express();
+// set up environment variables from .env file
+dotenv.config();
 
-const courseScraper = new CourseScraper()
+// set up mongoose
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+.then(
+    () => {
+        // success
+        console.log('Connected to mongodb database')
+    },
+    err => {
+        console.error(err)
+    }
+);
+
+mongoose.connection.on('error', err => {
+    console.error(err);
+});
+
+// set up express
+const app = express();
 
 function isJestRunning() {
     return process.env.JEST_WORKER_ID !== undefined;
@@ -43,11 +64,6 @@ app.use((req, res, next) => {
 app.get('/allsaints', (req, res) => {
     res.send("It's not an ocean it's a lake.");
 });
-
-app.get('/test', async (req, res) => {
-    res.json(await (new CoursePageScraper()).getData("CPSC", "221"));
-});
-
 const server = app.listen(port, () => console.log('Course Scraper app listening on port 3000!'));  
 
 export {

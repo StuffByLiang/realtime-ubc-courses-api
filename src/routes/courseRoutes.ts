@@ -1,5 +1,5 @@
 import express from 'express';
-import Course from "../models/course"
+import { Course } from "../models/course"
 import CourseScraper from "../util/CourseScraper"
 
 var router = express.Router(); 

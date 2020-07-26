@@ -1,4 +1,4 @@
-import GradeInfo from "../models/gradeInfo";
+import {GradeInfo} from "../models/gradeInfo";
 
 /**
  * High level class that parses the grades for a specific course section

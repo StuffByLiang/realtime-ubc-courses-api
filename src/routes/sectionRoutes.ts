@@ -1,5 +1,5 @@
 import express from 'express';
-import Section from "../models/section";
+import {Section} from "../models/section";
 import CourseScraper from "../util/CourseScraper";
 //testing
 import GradeScraper from "../util/GradeScraper";

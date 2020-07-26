@@ -1,6 +1,6 @@
 import express from 'express';
 import CourseScraper from "../util/CourseScraper";
-import Subject from '../models/subject';
+import {Subject} from '../models/subject';
 
 var router = express.Router();
 const courseScraper = new CourseScraper()

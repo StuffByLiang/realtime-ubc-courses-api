@@ -3,9 +3,11 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient
 const app = express()
+require('dotenv').config();
+
 app.use(bodyParser());
 
-const connectionString = "mongodb+srv://ubcsuperscraper:95Bl9LAYS29q2Xc7@course-scraper-api.vhytr.mongodb.net/course-scraper-api?retryWrites=true&w=majority";
+const connectionString = process.env.MONGO_URI
 const ObjectId = require('mongodb').ObjectID;
 
 

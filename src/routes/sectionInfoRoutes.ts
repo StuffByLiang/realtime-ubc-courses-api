@@ -1,7 +1,7 @@
 import express from 'express';
-import Section from "../models/section";
+import { Section } from "../models/section";
 import CourseScraper from "../util/CourseScraper";
-import SectionInfo from "../models/sectionInfo";
+import { SectionInfo } from "../models/sectionInfo";
 
 var router = express.Router();
 
