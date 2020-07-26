@@ -1,6 +1,7 @@
 import express from 'express';
 import { Course } from "../models/course"
 import CourseScraper from "../util/CourseScraper"
+import courseController from '../controllers/courseController'
 
 var router = express.Router(); 
 
@@ -8,21 +9,7 @@ const courseScraper = new CourseScraper()
 
 // any endpoints beginning with /course
 
-router.get("/:subject", async (req, res) => {
-  const subject = req.params.subject;
-
-  try {                         
-    const courses: Array<Course> = await courseScraper.getCourseList(subject);
-    res.json({
-      courses: courses
-    });
-  } catch (invalidSubjectError) { 
-    res.status(404).send({
-      error: invalidSubjectError.message
-    });
-    console.log("invalid department code"); 
-  }
-});
+router.get("/:subject", courseController.getCourse);
 
 
 

@@ -26,9 +26,9 @@ export interface SectionInfo {
     prof_rating?: number;
     link: string;
     lastUpdated?: Date;
-    }
+}
 
-    const sectionInfoSchema = new mongoose.Schema({
+const sectionInfoSchema = new mongoose.Schema({
     name: String,
     subject: String,
     course: String,
@@ -52,7 +52,10 @@ export interface SectionInfo {
     course_avg: Number,
     prof_rating: Number,
     link: String,
-    lastUpdated: Date,
+    lastUpdated: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 export const SectionInfoModel = mongoose.model('SectionInfo', sectionInfoSchema);

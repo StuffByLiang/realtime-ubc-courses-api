@@ -103,7 +103,7 @@ export default class CourseScraper {
     });
     return sectionList;
   }
-
+  
   /**
    * Returns all of the SectionInfo for each section in a course or throws an invalidCourseError if dept code + course number does not exist
    * e.g. throws an invalidCourseError if getSectionList is called on CPSC 1

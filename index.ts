@@ -6,8 +6,6 @@ import courseRoutes from './src/routes/courseRoutes';
 import sectionRoutes from './src/routes/sectionRoutes';
 import sectionInfoRoutes from './src/routes/sectionInfoRoutes';
 import subjectRoutes from './src/routes/subjectRoutes';
-import CourseScraper from './src/util/CourseScraper';
-import { CoursePageScraper } from './src/util/scraper';
 
 // set up environment variables from .env file
 dotenv.config();
