@@ -1,5 +1,6 @@
 import CourseScraper from "../util/CourseScraper";
 import { SectionInfo, SectionInfoModel } from "../models";
+import { updateAll } from "../util/helpers";
 
 const courseScraper = new CourseScraper()
 
@@ -27,8 +28,6 @@ async function getSectionInfo(req: any, res:any) {
         ...sectionInfo,
         lastUpdated: Date.now()
       }, {upsert: true});
-
-      console.log("got this realtime");
     }
 
     const data = await SectionInfoModel.findOne({subject, course, section });
@@ -55,23 +54,7 @@ async function getSectionInfoList(req: any, res:any) {
       const sectionInfoList: Array<SectionInfo> = await courseScraper.getSectionInfoList(subject, course);
 
       // updates the database entry or create if doesn't exist
-      await SectionInfoModel.bulkWrite(
-        sectionInfoList.map(sectionInfo => {
-          const {subject, course, section} = sectionInfo;
-          return {
-            updateOne: {
-              filter: { subject, course, section },
-              update: {
-                ...sectionInfo,
-                lastUpdated: Date.now()
-              },
-              upsert: true
-            }
-          }
-        }), {
-          ordered: false, // runs in parallel
-        }
-      );
+      await updateAll(SectionInfoModel, sectionInfoList, ["subject", "course", "section"])
     }
 
     const data = await SectionInfoModel.find({subject, course});
@@ -81,7 +64,7 @@ async function getSectionInfoList(req: any, res:any) {
     res.status(404).json({
       error: error.message
     }); 
-    console.log(error);
+    console.error(error); 
   }
 }
 

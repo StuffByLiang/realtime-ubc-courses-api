@@ -1,21 +1,32 @@
-import { Course } from '../models/course'
+import { Course, CourseModel } from '../models/course'
 import CourseScraper from '../util/CourseScraper'
+import { updateAll } from '../util/helpers';
 
 const courseScraper = new CourseScraper();
 
 async function getCourse(req:any, res:any) {
-    const subject = req.params.subject;
+  const subject = req.params.subject;
+  const realtime = req.query.realtime; // either 1 (true) or 0/unspecified (false)
 
   try {                         
-    const courses: Array<Course> = await courseScraper.getCourseList(subject);
+    const doesDataExist = await CourseModel.exists({subject});
+
+    if (!doesDataExist || realtime) {
+      const courses: Array<Course> = await courseScraper.getCourseList(subject);
+      // updates the database entry or create if doesn't exist
+      await updateAll(CourseModel, courses, ["subject", "course"])
+    }
+
+    const data = await CourseModel.find({subject});
+
     res.json({
-      courses: courses
+      courses: data
     });
-  } catch (invalidSubjectError) { 
+  } catch (error) { 
     res.status(404).send({
-      error: invalidSubjectError.message
+      error: error.message
     });
-    console.log("invalid department code"); 
+    console.error(error); 
   }
 }
 

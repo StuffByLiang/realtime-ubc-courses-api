@@ -1,4 +1,6 @@
 import axios from "axios";
+import { Mongoose, Model } from "mongoose";
+import { BulkWriteOpResultObject } from "mongodb";
 /**
    * sends a request to the url and gets the entire html as a string
    * 
@@ -16,6 +18,7 @@ async function getSiteHtml(url: string): Promise<string> {
     console.error(error)
   }
 }
+
 /**
  * Returns a trimmed string with no leading or trailing whitespace, or null if string isn't trimmable
  * 
@@ -27,7 +30,39 @@ function trim(string: string): string {
   return string.trim();
 }
 
+/**
+ * Takes in a mongoose Model, and updates each document in the list filtering based on the given keys.
+ * Creates the document if it doesn't exist.
+ * 
+ * @param  {Model<any>} Model
+ * @param  {Array<any>} list
+ * @param  {Array<string>} filterKeys
+ * @returns Promise<BulkWriteOpResultObject>
+ */
+async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<string>): Promise<BulkWriteOpResultObject> {
+  return await Model.bulkWrite(
+    list.map(item => {
+      return {
+        updateOne: {
+          filter: filterKeys.reduce((filter, key) => {
+            filter[key] = list[key];
+            return filter;
+          }, {}),
+          update: {
+            ...item,
+            lastUpdated: Date.now()
+          },
+          upsert: true
+        }
+      }
+    }), {
+      ordered: false, // runs in parallel
+    }
+  );
+}
+
 export {
   getSiteHtml,
-  trim
+  trim,
+  updateAll
 }

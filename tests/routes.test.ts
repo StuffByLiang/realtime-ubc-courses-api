@@ -46,7 +46,7 @@ describe("GET /json - a simple json endpoint", () => {
 // test course.t - Get ALL Courses
 describe("GET /course/:subject", () => {
   it("success", async () => {
-    const result = await request(app).get("/course/CPSC");
+    const result = await request(app).get("/course/CPSC?realtime=1");
     expect(result.status).toEqual(200);
 
     const cpsc221 : Course = {
@@ -61,7 +61,11 @@ describe("GET /course/:subject", () => {
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221"
     };
 
-    expect(result.body.courses).toContainEqual(cpsc221);
+    expect(result.body.courses).toEqual( 
+      expect.arrayContaining([ 
+        expect.objectContaining(cpsc221)
+      ])
+    );
     expect(result.body.courses.length).toBeGreaterThan(0);
   });
   
@@ -77,7 +81,7 @@ describe("GET /course/:subject", () => {
 // test section-info.ts - Get info for a specific course section
 describe("GET /sectionInfo/:subject/:number/:section", () => {
   it("success", async () => {
-    const result = await request(app).get("/sectionInfo/CPSC/100/101");
+    const result = await request(app).get("/sectionInfo/CPSC/100/101?realtime=1");
     
     const exSectionInfo: SectionInfo = {
       name: "CPSC 100 101 (Web-Oriented Course)",
@@ -113,7 +117,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
   
 
   it("fail invalid subject ", async () => {
-    const result = await request(app).get("/sectionInfo/LMAOSHIT/221/420");
+    const result = await request(app).get("/sectionInfo/LMAOSHIT/221/420?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Section Not Found"
@@ -121,7 +125,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
   });
   
   it("fail invalid course number", async () => { 
-    const result = await request(app).get("/sectionInfo/CPSC/69/420");
+    const result = await request(app).get("/sectionInfo/CPSC/69/420?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Section Not Found"
@@ -129,7 +133,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
   });
 
   it("fail invalid section", async () => {  
-    const result = await request(app).get("/sectionInfo/CPSC/221/69");
+    const result = await request(app).get("/sectionInfo/CPSC/221/69?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Section Not Found"
@@ -140,7 +144,7 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
 // test section-info.ts - Get all sections' info for a course
 describe("GET /sectionInfo/:subject/:number", () => {
   it("success", async () => {
-    const result = await request(app).get("/sectionInfo/CPSC/100");
+    const result = await request(app).get("/sectionInfo/CPSC/100?realtime=1");
     expect(result.status).toEqual(200);
     
     const section: SectionInfo = {
@@ -204,7 +208,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
   });
 
   it("fail invalid subject ", async () => {
-    const result = await request(app).get("/sectionInfo/LMAOSHIT/221");
+    const result = await request(app).get("/sectionInfo/LMAOSHIT/221?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Course Not Found"
@@ -212,7 +216,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
   });
   
   it("fail invalid course number", async () => { 
-    const result = await request(app).get("/sectionInfo/CPSC/69");
+    const result = await request(app).get("/sectionInfo/CPSC/69?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Course Not Found"
@@ -223,7 +227,7 @@ describe("GET /sectionInfo/:subject/:number", () => {
 // test section.ts - Get ALL Sections (101,102,etc.) 
 describe("GET /section/:subject/:number", () => {
   it("SUCCESS :)", async () => {
-    const result = await request(app).get("/section/CPSC/221");
+    const result = await request(app).get("/section/CPSC/221?realtime=1");
     expect(result.status).toEqual(200);
 
     const section: Section = {
@@ -254,7 +258,7 @@ describe("GET /section/:subject/:number", () => {
   });
   
   it("fail invalid subject TODO", async () => {
-    const result = await request(app).get("/section/LMAOSHIT/221");
+    const result = await request(app).get("/section/LMAOSHIT/221?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Course Not Found"
@@ -262,7 +266,7 @@ describe("GET /section/:subject/:number", () => {
   });
 
   it("fail invalid course number TODO", async () => {
-    const result = await request(app).get("/section/CPSC/69");
+    const result = await request(app).get("/section/CPSC/69?realtime=1");
     expect(result.status).toEqual(404);
     expect(result.body).toMatchObject({
       error: "Course Not Found"
@@ -273,7 +277,7 @@ describe("GET /section/:subject/:number", () => {
 // test subject
 describe("GET /subject", () => {
   it("SUCCESS :)", async () => {
-    const result = await request(app).get("/subject");
+    const result = await request(app).get("/subject?realtime=1");
     expect(result.status).toEqual(200);
 
     const subject: Subject ={

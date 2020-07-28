@@ -40,6 +40,8 @@ export default class GradeScraper {
     async getSectionAverage(term: string, subject: string, course: string, section: string, year: number): Promise<number> {
         // Lowkey can't get the average of the previous year since 2019W counts for both the Fall & Winter Term
 
+        return 0;
+
         let url1: string = "";              // The URL's for the 4 previous years
         let url2: string = "";
         let url3: string = "";
