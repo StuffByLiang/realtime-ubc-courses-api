@@ -1,11 +1,8 @@
-import SectionInfo from "../models/sectionInfo";
-import Section from "../models/section";
-import Course from "../models/course";
-import Subject from "../models/subject";
 import { BrowseSubjectsPageScraper, CoursePageScraper, SectionPageScraper, SubjectPageScraper } from "./scraper";
 import { CourseTableRow, SectionPageData, SectionTableRow, SubjectTableRow } from "../models/pages";
 import GradeScraper from "./GradeScraper";
 import { InvalidSubjectError, InvalidCourseError, InvalidSectionError } from "../errors";
+import { Course, SectionInfo, Section, Subject } from "src/models";
 
 /**
  * high level class that parses course and section information from urls 
@@ -106,7 +103,7 @@ export default class CourseScraper {
     });
     return sectionList;
   }
-
+  
   /**
    * Returns all of the SectionInfo for each section in a course or throws an invalidCourseError if dept code + course number does not exist
    * e.g. throws an invalidCourseError if getSectionList is called on CPSC 1

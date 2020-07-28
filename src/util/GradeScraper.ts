@@ -1,4 +1,4 @@
-import GradeInfo from "../models/gradeInfo";
+import {GradeInfo} from "../models/gradeInfo";
 
 /**
  * High level class that parses the grades for a specific course section
@@ -38,8 +38,9 @@ export default class GradeScraper {
      * @param  {string} section
      */
     async getSectionAverage(term: string, subject: string, course: string, section: string, year: number): Promise<number> {
-
         // Lowkey can't get the average of the previous year since 2019W counts for both the Fall & Winter Term
+
+        return 0;
 
         let url1: string = "";              // The URL's for the 4 previous years
         let url2: string = "";
@@ -71,6 +72,11 @@ export default class GradeScraper {
                 jsonArray.push(jsonObject);
             }
         }
+
+        if(jsonArray.length === 0) {
+            // no results
+            return 0;
+        }
         
         let counter  = 0; 
         for(let i = 0; i < jsonArray.length; i++) {
@@ -91,8 +97,8 @@ export default class GradeScraper {
         })
 
         overallAverage /= averageArray.length;
-        return parseFloat(overallAverage.toFixed(2));
 
+        return parseFloat(overallAverage.toFixed(2));
     }
 
     //TODO: Add DOC COMMENTS
