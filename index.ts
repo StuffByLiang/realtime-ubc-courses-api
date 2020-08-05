@@ -17,20 +17,22 @@ http.globalAgent.maxSockets = 50;
 dotenv.config();
 
 // set up mongoose
-mongoose.connect(process.env.MONGO_URI || "", {useNewUrlParser: true, useUnifiedTopology: true})
-.then(
-    () => {
-        // success
-        console.log('Connected to mongodb database')
-    },
-    err => {
-        console.error(err)
-    }
-);
+if(!isJestRunning()) {
+    mongoose.connect(process.env.MONGO_URI || "", {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(
+        () => {
+            // success
+            console.log('Connected to mongodb database')
+        },
+        err => {
+            console.error(err)
+        }
+    );
 
-mongoose.connection.on('error', err => {
-    console.error(err);
-});
+    mongoose.connection.on('error', err => {
+        console.error(err);
+    });
+}
 
 // set up express
 const app = express();

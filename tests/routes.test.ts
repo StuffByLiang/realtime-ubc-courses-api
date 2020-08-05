@@ -1,11 +1,32 @@
 import {app, server} from "../index";
 import request from "supertest";
+import mongoose from "mongoose";
+
+import { MongoMemoryServer } from "mongodb-memory-server";
+
+const mongod = new MongoMemoryServer();
 
 import {Course} from "../src/models/course";
 import {Section} from "../src/models/section";
 import {SectionInfo} from "../src/models/sectionInfo";
 import {Subject} from "../src/models/subject";
+
+
 jest.setTimeout(30000);
+
+beforeAll(async () => {
+  const uri = await mongod.getConnectionString();
+
+    const mongooseOpts = {
+        useNewUrlParser: true,
+        autoReconnect: true,
+        reconnectTries: Number.MAX_VALUE,
+        reconnectInterval: 1000
+    };
+
+    await mongoose.connect(uri, mongooseOpts);
+});
+
 /**
  * Returns element of array that contains a name equal to the given name. else return null. used to help for testing
  * 
@@ -350,5 +371,6 @@ describe("GET /subject", () => {
 });
 
 afterAll( async () => {
+  await mongoose.connection.close();
   server.close();
 });
