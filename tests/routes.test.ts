@@ -12,7 +12,7 @@ import {SectionInfo} from "../src/models/sectionInfo";
 import {Subject} from "../src/models/subject";
 
 
-jest.setTimeout(30000);
+jest.setTimeout(10000);
 
 beforeAll(async () => {
   const uri = await mongod.getConnectionString();
@@ -21,7 +21,8 @@ beforeAll(async () => {
         useNewUrlParser: true,
         autoReconnect: true,
         reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 1000
+        reconnectInterval: 1000,
+        useUnifiedTopology: true
     };
 
     await mongoose.connect(uri, mongooseOpts);
