@@ -34,10 +34,10 @@
     "mongodb": "^3.6.0",
     "mongoose": "^5.9.27",
     "nodemon": "^2.0.4",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "@types/cheerio": "^0.22.21"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.21",
     "@types/express": "^4.17.7",
     "@types/jest": "^26.0.8",
     "@types/mongodb": "^3.5.25",
