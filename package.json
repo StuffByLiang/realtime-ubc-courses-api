@@ -4,7 +4,7 @@
   "description": "realtime ubc course scraper ",
   "main": "index.ts",
   "scripts": {
-    "helloworld": "echo \"Hello world!!\"",
+    "postinstall": "npm run build",
     "dev": "nodemon index.ts",
     "test": "jest",
     "lint": "eslint . --ext .ts",
@@ -48,6 +48,7 @@
     "eslint": "^7.6.0",
     "jest": "^26.2.2",
     "mongodb-memory-server": "^6.6.3",
+    "rimraf": "^3.0.2",
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.4",
     "ts-node": "^8.10.2",
