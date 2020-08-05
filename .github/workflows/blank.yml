@@ -25,10 +25,10 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.1
+    - name: Install Dependencies
+      run: npm i
 
     - name: Run Jest
-      uses: stefanoeb/jest-action@1.0.4
+      run: npm run test
     
     
