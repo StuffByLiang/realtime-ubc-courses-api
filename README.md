@@ -9,6 +9,22 @@ Download the following to get started programming
 https://nodejs.org/en/
 https://www.postman.com/
 
+create a `.env` file. refer to `.env copy`. put in your mongo_uri in there.
+
+run
+
+```
+npm start
+```
+
+or 
+
+```
+npm run dev
+```
+
+if you're developing
+
 # Contributors
 - Liang Liu
 - Andrew Han

@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./build",
     "baseUrl": "./",
     "paths": {
       "src/*": [

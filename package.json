@@ -5,9 +5,11 @@
   "main": "index.ts",
   "scripts": {
     "helloworld": "echo \"Hello world!!\"",
-    "start": "nodemon index.ts",
+    "dev": "nodemon index.ts",
     "test": "jest",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js"
   },
   "repository": {
     "type": "git",
