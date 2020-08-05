@@ -10,6 +10,8 @@ describe("SectionPageScraper.ts", () => {
 
   it("getData should contain relevent information for CPSC 221 101", async () => {
     const expected: SectionPageData = {
+      status: expect.any(String),
+      activity: "Web-Oriented Course",
       name: "CPSC 221 101 (Web-Oriented Course)",
       subject: "CPSC",
       course: "221",
@@ -18,11 +20,32 @@ describe("SectionPageScraper.ts", () => {
       prof: "HEEREN, CINDA",
       term: "1",
       year: "2020",
-      days: ["Mon", "Wed", "Fri"],
-      start_time: "14:00",
-      end_time: "15:00",
-      building: "",
-      room: "",
+      schedule: [
+        {
+          day: "Mon",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+          building: "",
+          room: "",
+        },
+        {
+          day: "Wed",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+          building: "",
+          room: "",
+        },
+        {
+          day: "Fri",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+          building: "",
+          room: "",
+        }
+      ],
       total_seats_remaining: expect.any(Number),
       currently_registered: expect.any(Number),
       general_seats_remaining: expect.any(Number),

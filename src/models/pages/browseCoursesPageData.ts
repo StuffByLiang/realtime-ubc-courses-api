@@ -17,4 +17,4 @@ export interface SubjectTableRow {
   faculty: string;
   hasCourses: boolean;
   link: string;
-} 
+}

@@ -2,7 +2,7 @@ import { BrowseSubjectsPageScraper, CoursePageScraper, SectionPageScraper, Subje
 import { CourseTableRow, SectionPageData, SectionTableRow, SubjectTableRow } from "../models/pages";
 import GradeScraper from "./GradeScraper";
 import { InvalidSubjectError, InvalidCourseError, InvalidSectionError } from "../errors";
-import { Course, SectionInfo, Section, Subject } from "src/models";
+import { Course, SectionInfo, Section, Subject, SectionInfoModel } from "src/models";
 
 /**
  * high level class that parses course and section information from urls 
@@ -113,15 +113,40 @@ export default class CourseScraper {
    * @returns Promise         - Info for all of the sections offered for the course
    */
   async getSectionInfoList(subject: string, course: string): Promise<Array<SectionInfo>> {
-    let sectionInfoList: Array<SectionInfo> = [];
     const sectionList: Array<Section> = await this.getSectionList(subject, course);
 
-    await Promise.all(sectionList.map(async (section) => {
-      const sectionInfo: SectionInfo = await this.getSectionInfo(section.subject, section.course.toString(), section.section);
-      sectionInfoList.push(sectionInfo);
+    let sectionInfoList = await Promise.all(sectionList.map(async (section) => {
+      try {
+        const sectionInfo: SectionInfo = await this.getSectionInfo(section.subject, section.course, section.section);
+        // console.log("done " + section.name)
+        return sectionInfo;
+      } catch (err) {
+        // console.log("error section" + section.name)
+        // console.log(section)
+        // console.log(err)
+      }
+      return null
     }));
 
     return sectionInfoList;
+  }
+
+  async getSectionInfoListForSubject(subject: string): Promise<Record<string, Array<SectionInfo>>> {
+    let courseList: Array<Course> = await this.getCourseList(subject);
+    let map = {};
+    
+    await Promise.all(courseList.map(async (course) => {
+      try {
+        const sectionInfoList = await this.getSectionInfoList(course.subject, course.course);
+        // console.log("done " + course.name)
+        map[course.name] = sectionInfoList;
+      } catch (err) {
+        // console.log("error course " + course.name)
+        // console.log(err)
+      }
+    }));
+
+    return map;
   }
 
   /**

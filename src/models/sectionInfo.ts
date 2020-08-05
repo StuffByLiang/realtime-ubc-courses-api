@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import {Course} from "./course";
+import { Schedule } from ".";
 
 export interface SectionInfo {
+    status: string,
+    activity : string,
     name: string,
     subject: string,
     course: string,
@@ -11,16 +14,12 @@ export interface SectionInfo {
     prof: string; 
     term: string;
     year: string;
-    days: Array<string>; 
-    start_time: string; 
-    end_time: string; 
+    schedule: Array<Schedule>;
     total_seats_remaining: number;
     currently_registered: number;
     general_seats_remaining: number;
     restricted_seats_remaining: number;
     seats_reserved_for: Array<string>;
-    building: string;
-    room: string;
     credits: string;
     course_avg?: number; 
     prof_rating?: number;
@@ -29,6 +28,8 @@ export interface SectionInfo {
 }
 
 const sectionInfoSchema = new mongoose.Schema({
+    status: String,
+    activity: String,
     name: String,
     subject: String,
     course: String,
@@ -38,16 +39,19 @@ const sectionInfoSchema = new mongoose.Schema({
     prof: String,
     term: String,
     year: String,
-    days: [String],
-    start_time: String,
-    end_time: String,
+    schedule: [{
+        day: String,
+        start_time: String,
+        end_time: String,
+        term: String,
+        building: String,
+        room: String,
+    }],
     total_seats_remaining: Number,
     currently_registered: Number,
     general_seats_remaining: Number,
     restricted_seats_remaining: Number,
     seats_reserved_for: [String],
-    building: String,
-    room: String,
     credits: String,
     course_avg: Number,
     prof_rating: Number,

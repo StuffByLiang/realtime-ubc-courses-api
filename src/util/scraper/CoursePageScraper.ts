@@ -1,6 +1,7 @@
 import { getSiteHtml, trim } from "../helpers";
 import { CoursePageData, SectionTableRow } from "../../models/pages";
 import cheerio from "cheerio";
+import { Schedule } from "src/models";
 
 export class CoursePageScraper {
   async getData(subject: string, course: string): Promise<CoursePageData> {
@@ -23,8 +24,29 @@ export class CoursePageScraper {
     let sections: Array<SectionTableRow> = []; 
     let tableRows: Cheerio = $("table.table.table-striped.section-summary > tbody").children(); // rows of the table cont. courses
     for(let i = 0; i < tableRows.length; i++) {
-        let s = this.parseSectionTableRow($(tableRows[i]));
-        sections.push(s); 
+      let firstRow = $(tableRows[i]);
+
+      let currentRow = firstRow;
+      let nextRow = i != tableRows.length-1 ? $(tableRows[i+1]) : undefined;
+      let schedule = this.parseTime(currentRow);
+      let terms = [currentRow.children().eq(3).text()];
+
+      while(i != tableRows.length-1 && currentRow.attr('class') === nextRow.attr('class')) {
+        // loop until next table row doesnt have same color as previous table row or until last element
+        terms.push(nextRow.children().eq(3).text());
+        schedule = schedule.concat(this.parseTime(nextRow))
+        currentRow = nextRow;
+        i++;
+        nextRow = i != tableRows.length-1 ? $(tableRows[i+1]) : undefined;
+      }
+
+      let s: SectionTableRow = {
+        ...this.parseSectionTableRow(firstRow),
+        schedule,
+        term: terms.includes('1-2') || (terms.includes('1') && terms.includes('2')) ? '1-2' : terms[0]
+      };
+
+      sections.push(s); 
     }
 
     let name = $("li.active").first().text();
@@ -55,22 +77,38 @@ export class CoursePageScraper {
   parseSectionTableRow(tableRow: Cheerio): SectionTableRow {
     const status = trim(tableRow.children().eq(0).text());
 
-    let section: SectionTableRow = {
+    let section = {
       status: status === "" ? "Available" : status,
       name: tableRow.children().eq(1).text(),
       subject: tableRow.children().find("a").text().split(" ")[0],
       course: tableRow.children().find("a").text().split(" ")[1],
       section: trim(tableRow.children().find("a").text().split(" ")[2]), // L1A/101/T1A
       activity: tableRow.children().eq(2).text(),
-      term: tableRow.children().eq(3).text(),
+      term: "",
       interval: tableRow.children().eq(4).text(),
-      days: trim(tableRow.children().eq(5).text()).split(" "),
-      start_time: tableRow.children().eq(6).text(),
-      end_time: tableRow.children().eq(7).text(),
+      schedule: [],
       comments: tableRow.children().eq(8).find(".accordion-body").text().trim(),
       link: "https://courses.students.ubc.ca" + tableRow.children().find("a").attr("href"),
     }
 
     return section; 
+  }
+
+  /**
+   * Given a cheerio/jquery tableRow element, return the times it occurs in
+   * @param  {Cheerio} tableRow
+   * @returns Array<Time>
+   */
+  parseTime(tableRow: Cheerio): Array<Schedule> {
+    const days = trim(tableRow.children().eq(5).text()).split(" ");
+
+    return days.map((day) => {
+      return {
+      day: day,
+      term: tableRow.children().eq(3).text(),
+      start_time: tableRow.children().eq(6).text(),
+      end_time: tableRow.children().eq(7).text(),
+      }
+    })
   }
 }

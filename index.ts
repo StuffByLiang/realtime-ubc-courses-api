@@ -7,6 +7,12 @@ import sectionRoutes from './src/routes/sectionRoutes';
 import sectionInfoRoutes from './src/routes/sectionInfoRoutes';
 import subjectRoutes from './src/routes/subjectRoutes';
 
+let http = require('http');
+let https = require('https');
+
+https.globalAgent.maxSockets = 50;
+http.globalAgent.maxSockets = 50;
+
 // set up environment variables from .env file
 dotenv.config();
 

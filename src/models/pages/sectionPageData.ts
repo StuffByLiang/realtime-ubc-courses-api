@@ -3,7 +3,11 @@
   example url: https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=110&section=101
 */
 
+import { Schedule } from "..";
+
 export interface SectionPageData {
+  status: string;
+  activity: string;
   name: string;
   subject: string;
   course: string;
@@ -12,11 +16,7 @@ export interface SectionPageData {
   prof: string; 
   term: string;
   year: string;
-  days: Array<string>; 
-  start_time: string; 
-  end_time: string; 
-  building: string;
-  room: string;
+  schedule: Array<Schedule>;
   total_seats_remaining: number;
   currently_registered: number;
   general_seats_remaining: number;

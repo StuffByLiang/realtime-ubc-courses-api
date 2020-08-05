@@ -5,7 +5,7 @@ import {Course} from "../src/models/course";
 import {Section} from "../src/models/section";
 import {SectionInfo} from "../src/models/sectionInfo";
 import {Subject} from "../src/models/subject";
-
+jest.setTimeout(30000);
 /**
  * Returns element of array that contains a name equal to the given name. else return null. used to help for testing
  * 
@@ -47,7 +47,6 @@ describe("GET /json - a simple json endpoint", () => {
 describe("GET /course/:subject", () => {
   it("success", async () => {
     const result = await request(app).get("/course/CPSC?realtime=1");
-    expect(result.status).toEqual(200);
 
     const cpsc221 : Course = {
       name: "CPSC 221",
@@ -61,11 +60,10 @@ describe("GET /course/:subject", () => {
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221"
     };
 
-    expect(result.body.courses).toEqual( 
-      expect.arrayContaining([ 
-        expect.objectContaining(cpsc221)
-      ])
-    );
+    const data = search("CPSC 221", result.body.courses);
+    expect(result.status).toEqual(200);
+    expect(data).toMatchObject(cpsc221);
+
     expect(result.body.courses.length).toBeGreaterThan(0);
   });
   
@@ -84,6 +82,8 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
     const result = await request(app).get("/sectionInfo/CPSC/100/101?realtime=1");
     
     const exSectionInfo: SectionInfo = {
+      status: expect.any(String),
+      activity: "Web-Oriented Course",
       name: "CPSC 100 101 (Web-Oriented Course)",
       subject: "CPSC",
       course: "100",
@@ -93,16 +93,29 @@ describe("GET /sectionInfo/:subject/:number/:section", () => {
       prof: "WONG, JESSICA",
       term: "1",
       year: "2020",
-      days: ["Tue", "Thu"],
-      start_time: "15:30",
-      end_time: "17:00", 
+      schedule: [
+        {
+          day: "Tue",
+          term: "1",
+          start_time: "15:30",
+          end_time: "17:00",
+          building: "",
+          room: "",
+        },
+        {
+          day: "Thu",
+          term: "1",
+          start_time: "15:30",
+          end_time: "17:00",
+          building: "",
+          room: "",
+        },
+      ],
       total_seats_remaining: expect.any(Number),
       currently_registered: expect.any(Number),
       general_seats_remaining: expect.any(Number),
       restricted_seats_remaining: expect.any(Number),
       seats_reserved_for: expect.any(Array),
-      building: "",
-      room: "",
       credits: "3",
       course_avg: expect.any(Number),
       // prof_rating: expect.anything(),
@@ -148,6 +161,8 @@ describe("GET /sectionInfo/:subject/:number", () => {
     expect(result.status).toEqual(200);
     
     const section: SectionInfo = {
+      status: expect.any(String),
+      activity: "Web-Oriented Course",
       name: "CPSC 100 101 (Web-Oriented Course)",
       subject: "CPSC",
       course: "100",
@@ -157,22 +172,37 @@ describe("GET /sectionInfo/:subject/:number", () => {
       prof: "WONG, JESSICA",
       term: "1",
       year: "2020",
-      days: ["Tue", "Thu"],
-      start_time: "15:30",
-      end_time: "17:00", 
+      schedule: [
+        {
+          day: "Tue",
+          term: "1",
+          start_time: "15:30",
+          end_time: "17:00",
+          building: "",
+          room: "",
+        },
+        {
+          day: "Thu",
+          term: "1",
+          start_time: "15:30",
+          end_time: "17:00",
+          building: "",
+          room: "",
+        },
+      ],
       total_seats_remaining: expect.any(Number),
       currently_registered: expect.any(Number),
       general_seats_remaining: expect.any(Number),
       restricted_seats_remaining: expect.any(Number),
       seats_reserved_for: ["in one of these programs: BSC\nin year: <=2"],
-      building: "",
-      room: "",
       credits: "3",
       prof_rating: null, // TODO:
       // prof_rating: expect.anything(),
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=100&section=101"
     }
     const section2: SectionInfo = {
+      status: expect.any(String),
+      activity: "lol",
       name: "CPSC 69 420",
       subject: "CPSC",
       course: "69",
@@ -182,16 +212,21 @@ describe("GET /sectionInfo/:subject/:number", () => {
       prof: "Belleville, Patrice",
       term: "1",
       year: "2020",
-      days: ["Mon"],
-      start_time: "23:30",
-      end_time: "17:00", 
+      schedule: [
+        {
+          day: "Mon",
+          term: "1",
+          start_time: "23:30",
+          end_time: "17:00",
+          building: "CU",
+          room: "ICCS 69420",
+        },
+      ], 
       total_seats_remaining: 1003,
       currently_registered: 2,
       general_seats_remaining: 3,
       restricted_seats_remaining: 1000,
       seats_reserved_for: ["BSC in year: <=2"],
-      building: "CU",
-      room: "ICCS 69420",
       credits: "3",
       course_avg: 69,
       prof_rating: 4.20,
@@ -239,20 +274,35 @@ describe("GET /section/:subject/:number", () => {
       activity: "Web-Oriented Course",
       term: "1",
       interval: "",
-      days: ["Mon", "Wed", "Fri"],
-      start_time: "14:00",
-      end_time: "15:00",
+      schedule: [
+        {
+          day: "Mon",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+        },
+        {
+          day: "Wed",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+        },
+        {
+          day: "Fri",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+        }
+      ],
       comments: "If all the lab and/or tutorial seats are full the department will ensure that there are enough lab/tutorial seats available for the number of students registered in the course by either adding additional lab/tutorial sections or expenadind the number of seats in the activity once we know how many extra students we will need to accommodate. However, there is no guarantee that these seats will fit your preferred time.  You may need to change your registration in other courses to get access to a lab/tutorial where there are available seats.",
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
       endpoint: "/sectionInfo/CPSC/221/101",
     }
     expect(result.status).toEqual(200);
 
-    expect(result.body.sections).toEqual( 
-      expect.arrayContaining([ 
-        expect.objectContaining(section)
-      ])
-    );
+    let data = search("CPSC 221 101", result.body.sections);
+
+    expect(data).toMatchObject(section);
 
     expect(result.body.sections.length).toBeGreaterThan(1);
   });

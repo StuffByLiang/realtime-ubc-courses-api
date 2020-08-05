@@ -37,7 +37,6 @@ async function getSectionInfo(req: any, res:any) {
     res.status(404).json({
       error: error.message
     }); 
-    console.log(error); 
   }
 }
 
@@ -68,7 +67,24 @@ async function getSectionInfoList(req: any, res:any) {
   }
 }
 
+async function getAllSectionInfoForSubject(req: any, res:any) {
+  const subject = req.params.subject;
+  const realtime = req.query.realtime; // either 1 (true) or 0/undefined/null (false)
+  
+  try {
+    const data = await courseScraper.getSectionInfoListForSubject(subject);
+    res.json(data);
+
+  } catch (error) {
+    res.status(404).json({
+      error: error.message
+    }); 
+    console.error(error); 
+  }
+}
+
 export default {
+  getAllSectionInfoForSubject,
   getSectionInfoList,
   getSectionInfo
 }

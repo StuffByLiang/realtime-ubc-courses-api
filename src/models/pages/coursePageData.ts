@@ -3,6 +3,8 @@
   example url: https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=110
 */
 
+import { Schedule } from "../schedule";
+
 export interface CoursePageData {
   name: string;
   subject: string;
@@ -26,9 +28,7 @@ export interface SectionTableRow {
   activity: string;
   term: string;
   interval: string;
-  days: Array<string>;
-  start_time: string;
-  end_time: string;
+  schedule: Array<Schedule>
   comments: string;
   link: string;
 }

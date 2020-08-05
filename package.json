@@ -7,8 +7,7 @@
     "helloworld": "echo \"Hello world!!\"",
     "start": "nodemon index.ts",
     "test": "jest",
-    "lint": "eslint . --ext .ts",
-    "mongodb": "nodemon mongoLearning/playingWithMongodb.ts"
+    "lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",

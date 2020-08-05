@@ -18,9 +18,26 @@ describe("CoursePageScraper.ts", () => {
       activity: "Web-Oriented Course",
       term: "1",
       interval: "",
-      days: ["Mon", "Wed", "Fri"],
-      start_time: "14:00",
-      end_time: "15:00",
+      schedule: [
+        {
+          day: "Mon",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+        },
+        {
+          day: "Wed",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+        },
+        {
+          day: "Fri",
+          term: "1",
+          start_time: "14:00",
+          end_time: "15:00",
+        }
+      ],
       comments: "If all the lab and/or tutorial seats are full the department will ensure that there are enough lab/tutorial seats available for the number of students registered in the course by either adding additional lab/tutorial sections or expenadind the number of seats in the activity once we know how many extra students we will need to accommodate. However, there is no guarantee that these seats will fit your preferred time.  You may need to change your registration in other courses to get access to a lab/tutorial where there are available seats.",
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101"
     }
@@ -34,9 +51,14 @@ describe("CoursePageScraper.ts", () => {
       activity: "Laboratory",
       term: "1",
       interval: "",
-      days: ["Tue"],
-      start_time: "11:00",
-      end_time: "13:00",
+      schedule: [
+        {
+          day: "Tue",
+          term: "1",
+          start_time: "11:00",
+          end_time: "13:00",
+        }
+      ],
       comments: "",
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=L1A"
     }

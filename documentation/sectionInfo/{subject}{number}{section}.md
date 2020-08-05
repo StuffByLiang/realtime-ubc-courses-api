@@ -25,6 +25,8 @@ eg CPSC 221 101
 ```json
 {
   "name": "CPSC 221 101 (Web-Oriented Course)",
+  "status": "restricted",
+  "activity": "Web-Oriented Course",
   "subject": "CPSC",
   "course": "221",
   "section": "101",
@@ -34,13 +36,32 @@ eg CPSC 221 101
   "prof": "HEEREN, CINDA",
   "term": "1",
   "year": "2020",
-  "days": [
-    "Mon",
-    "Wed",
-    "Fri"
+  "schedule": [
+    {
+      "day": "Mon",
+      "term": "1",
+      "start_time": "14:00",
+      "end_time": "15:00",
+      "building": "",
+      "room": ""
+    },
+    {
+      "day": "Wed",
+      "term": "1",
+      "start_time": "14:00",
+      "end_time": "15:00",
+      "building": "",
+      "room": ""
+    },
+    {
+      "day": "Fri",
+      "term": "1",
+      "start_time": "14:00",
+      "end_time": "15:00",
+      "building": "",
+      "room": ""
+    }
   ],
-  "start_time": "14:00",
-  "end_time": "15:00",
   "total_seats_remaining": 56,
   "currently_registered": 135,
   "general_seats_remaining": 0,
@@ -52,8 +73,6 @@ eg CPSC 221 101
     "in one of these programs: BCS",
     "with one of these specializations: MAJ MASC"
   ],
-  "building": "",
-  "room": "",
   "credits": "4",
   "link": "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
   "course_avg": 76.55,

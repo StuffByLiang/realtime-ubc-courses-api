@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Schedule } from "./schedule";
 
 export interface Section {
   name: string; // CPSC 221 911
@@ -8,10 +9,8 @@ export interface Section {
   status: string; 
   activity: string;
   term: string;
+  schedule: Array<Schedule>
   interval: string;
-  days: Array<string>;
-  start_time: string;
-  end_time: string;
   comments: string;
   link: string;
   endpoint: string;
@@ -26,10 +25,13 @@ const sectionSchema = new mongoose.Schema({
   status: String, 
   activity: String,
   term: String,
+  schedule: [{
+    day: String,
+    start_time: String,
+    end_time: String,
+    term: String
+  }],
   interval: String,
-  days: [String],
-  start_time: String,
-  end_time: String,
   comments: String,
   link: String,
   endpoint: String,
