@@ -43,7 +43,7 @@ function isJestRunning() {
 
 const defaultPort = isJestRunning() ? 3001 : 3000;
 
-let port = process.env.port || defaultPort;
+let port = process.env.PORT || defaultPort;
 
 // set up routes
 app.use('/course', courseRoutes);
