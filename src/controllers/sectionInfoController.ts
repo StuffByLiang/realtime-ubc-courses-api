@@ -11,9 +11,9 @@ const courseScraper = new CourseScraper()
  *  Sends user the section Info.
  */
 async function getSectionInfo(req: any, res:any) {
-  const subject = req.params.subject;
-  const course = req.params.course;
-  const section = req.params.section;
+  const subject = req.params.subject.toUpperCase();;
+  const course = req.params.course.toUpperCase();;
+  const section = req.params.section.toUpperCase();;
   const realtime = req.query.realtime; // either 1 (true) or 0/unspecified (false)
   
   try {
@@ -41,8 +41,8 @@ async function getSectionInfo(req: any, res:any) {
 }
 
 async function getSectionInfoList(req: any, res:any) {
-  const subject = req.params.subject;
-  const course = req.params.course;
+  const subject = req.params.subject.toUpperCase();;
+  const course = req.params.course.toUpperCase();;
   const realtime = req.query.realtime; // either 1 (true) or 0/undefined/null (false)
   
   try {
@@ -68,7 +68,7 @@ async function getSectionInfoList(req: any, res:any) {
 }
 
 async function getAllSectionInfoForSubject(req: any, res:any) {
-  const subject = req.params.subject;
+  const subject = req.params.subject.toUpperCase();;
   const realtime = req.query.realtime; // either 1 (true) or 0/undefined/null (false)
   
   try {

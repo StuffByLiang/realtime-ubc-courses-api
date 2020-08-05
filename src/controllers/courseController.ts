@@ -5,7 +5,7 @@ import { updateAll } from '../util/helpers';
 const courseScraper = new CourseScraper();
 
 async function getCourse(req:any, res:any) {
-  const subject = req.params.subject;
+  const subject = req.params.subject.toUpperCase();;
   const realtime = req.query.realtime; // either 1 (true) or 0/unspecified (false)
 
   try {                         
