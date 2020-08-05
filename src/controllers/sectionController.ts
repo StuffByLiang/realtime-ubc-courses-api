@@ -12,8 +12,8 @@ const courseScraper = new CourseScraper()
 const gradeScraper = new GradeScraper();
 
 async function getSections(req : any, res : any) {
-  const subject = req.params.subject;
-  const course = req.params.course;
+  const subject = req.params.subject.toUpperCase();
+  const course = req.params.course.toUpperCase();
   const realtime = req.query.realtime; // either 1 (true) or 0/undefined/null (false)
 
 
@@ -39,10 +39,10 @@ async function getSections(req : any, res : any) {
 }
 
 async function getAverageOfSection(req : any, res : any) {
-    const term = req.params.term;
-    const subject = req.params.subject;
-    const course = req.params.course;
-    const section = req.params.section;
+    const term = req.params.term.toUpperCase();
+    const subject = req.params.subject.toUpperCase();
+    const course = req.params.course.toUpperCase();
+    const section = req.params.section.toUpperCase();
   
     try {
       const average: number = await gradeScraper.getSectionAverage(term, subject, course, section, 2020);
