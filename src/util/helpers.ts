@@ -42,10 +42,11 @@ function trim(string: string): string {
 async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<string>): Promise<BulkWriteOpResultObject> {
   return await Model.bulkWrite(
     list.map(item => {
+      if(!item) return null;
       return {
         updateOne: {
           filter: filterKeys.reduce((filter, key) => {
-            filter[key] = list[key];
+            filter[key] = item[key];
             return filter;
           }, {}),
           update: {
@@ -55,7 +56,7 @@ async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<
           upsert: true
         }
       }
-    }), {
+    }).filter(x => x), {
       ordered: false, // runs in parallel
     }
   );

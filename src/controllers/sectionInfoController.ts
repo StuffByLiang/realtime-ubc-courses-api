@@ -72,7 +72,42 @@ async function getAllSectionInfoForSubject(req: any, res:any) {
   const realtime = req.query.realtime; // either 1 (true) or 0/undefined/null (false)
   
   try {
-    const data = await courseScraper.getSectionInfoListForSubject(subject);
+    const doesDataExist = await SectionInfoModel.exists({subject});
+
+    if (!doesDataExist || realtime) {
+       // we scrape the website in realtime if sectionInfo doesnt exist in database or realtime is true
+      const sectionInfoList: Array<SectionInfo> = await courseScraper.getSectionInfoListForSubject(subject);
+
+      // updates the database entry or create if doesn't exist
+      await updateAll(SectionInfoModel, sectionInfoList, ["subject", "course", "section"])
+    }
+
+    const data = await SectionInfoModel.find({subject});
+    res.json(data);
+
+  } catch (error) {
+    res.status(404).json({
+      error: error.message
+    }); 
+    console.error(error); 
+  }
+}
+
+async function getAllSectionInfo(req: any, res:any) {
+  const realtime = req.query.realtime; // either 1 (true) or 0/undefined/null (false)
+  
+  try {
+    const doesDataExist = await SectionInfoModel.exists({});
+
+    if (!doesDataExist || realtime) {
+       // we scrape the website in realtime if sectionInfo doesnt exist in database or realtime is true
+      const sectionInfoList: Array<SectionInfo> = await courseScraper.getAllSectionInfo();
+
+      // updates the database entry or create if doesn't exist
+      await updateAll(SectionInfoModel, sectionInfoList, ["subject", "course", "section"])
+    }
+
+    const data = await SectionInfoModel.find({});
     res.json(data);
 
   } catch (error) {
@@ -86,5 +121,6 @@ async function getAllSectionInfoForSubject(req: any, res:any) {
 export default {
   getAllSectionInfoForSubject,
   getSectionInfoList,
-  getSectionInfo
+  getSectionInfo,
+  getAllSectionInfo
 }

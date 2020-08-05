@@ -9,6 +9,7 @@ const courseScraper = new CourseScraper()
 
 // any endpoints beginning with /course
 
+router.get("/", courseController.getAllCourses);
 router.get("/:subject", courseController.getCourse);
 
 

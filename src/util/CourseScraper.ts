@@ -54,6 +54,25 @@ export default class CourseScraper {
     }
     return courses;
   }
+
+  async getAllCourses(): Promise<Array<Course>> {
+    let subjectList: Array<Subject> = await this.getSubjectList();
+    
+    let result = await Promise.all(subjectList.map(async (subject) => {
+      try {
+        if(!subject.hasCourses) return [];
+        const sectionInfoList = await this.getCourseList(subject.subject);
+        console.log("done " + subject.subject)
+        return sectionInfoList
+      } catch (err) {
+        console.log("error " + subject.subject)
+        // console.log(err)
+        return [];
+      }
+    }));
+
+    return [].concat.apply([], result);
+  }
   
    /**
    * Returns all of the info for the specified course section, or throws an invalidSectionError either
@@ -118,10 +137,10 @@ export default class CourseScraper {
     let sectionInfoList = await Promise.all(sectionList.map(async (section) => {
       try {
         const sectionInfo: SectionInfo = await this.getSectionInfo(section.subject, section.course, section.section);
-        // console.log("done " + section.name)
+        console.log("done " + section.name)
         return sectionInfo;
       } catch (err) {
-        // console.log("error section" + section.name)
+        console.log("error section" + section.name)
         // console.log(section)
         // console.log(err)
       }
@@ -131,23 +150,78 @@ export default class CourseScraper {
     return sectionInfoList;
   }
 
-  async getSectionInfoListForSubject(subject: string): Promise<Record<string, Array<SectionInfo>>> {
+  async getSectionInfoListForSubject(subject: string): Promise<Array<SectionInfo>> {
     let courseList: Array<Course> = await this.getCourseList(subject);
-    let map = {};
     
-    await Promise.all(courseList.map(async (course) => {
+    let result = await Promise.all(courseList.map(async (course) => {
       try {
         const sectionInfoList = await this.getSectionInfoList(course.subject, course.course);
-        // console.log("done " + course.name)
-        map[course.name] = sectionInfoList;
+        console.log("done " + course.name)
+        return sectionInfoList;
       } catch (err) {
-        // console.log("error course " + course.name)
+        console.log("error course " + course.name)
         // console.log(err)
+        return []
       }
     }));
 
-    return map;
+    return [].concat.apply([], result);
   }
+
+  async getAllSectionInfo(): Promise<Array<SectionInfo>> {
+    let subjectList: Array<Subject> = await this.getSubjectList();
+    
+    let result = await Promise.all(subjectList.map(async (subject) => {
+      try {
+        if(!subject.hasCourses) return [];
+        const sectionInfoList = await this.getSectionInfoListForSubject(subject.subject);
+        console.log("done " + subject.subject)
+        return sectionInfoList
+      } catch (err) {
+        console.log("error " + subject.subject)
+        // console.log(err)
+        return [];
+      }
+    }));
+
+    return [].concat.apply([], result);
+  }
+
+  // async getSectionInfoListForSubject(subject: string): Promise<Record<string, Array<SectionInfo>>> {
+  //   let courseList: Array<Course> = await this.getCourseList(subject);
+  //   let map = {};
+    
+  //   await Promise.all(courseList.map(async (course) => {
+  //     try {
+  //       const sectionInfoList = await this.getSectionInfoList(course.subject, course.course);
+  //       // console.log("done " + course.name)
+  //       map[course.name] = sectionInfoList;
+  //     } catch (err) {
+  //       // console.log("error course " + course.name)
+  //       // console.log(err)
+  //     }
+  //   }));
+
+  //   return map;
+  // }
+
+  // async getAllSectionInfo(): Promise<Record<string, Record<string, Array<SectionInfo>>>> {
+  //   let subjectList: Array<Subject> = await this.getSubjectList();
+  //   let map = {};
+    
+  //   await Promise.all(subjectList.map(async (subject) => {
+  //     try {
+  //       const data = await this.getSectionInfoListForSubject(subject.subject);
+  //       // console.log("done " + course.name)
+  //       map[subject.subject] = data;
+  //     } catch (err) {
+  //       // console.log("error course " + course.name)
+  //       // console.log(err)
+  //     }
+  //   }));
+
+  //   return map;
+  // }
 
   /**
    * Returns all of the subjects at UBC

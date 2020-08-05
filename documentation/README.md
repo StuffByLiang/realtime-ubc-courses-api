@@ -8,10 +8,13 @@ features that are nice to have:
 
 Essential features:
 * [retrieve all subject codes](subject/index.md) : `GET /subject`
-* [retrieve course/section info](sectionInfo/{subject}{number}{section}.md) : `GET /sectionInfo/{subject}/{number}/{section}`
-* [retrieve course/section info](sectionInfo/{subject}{number}.md) : `GET /sectionInfo/{subject}/{number}`
+* [retrieve all sections at UBC](sectionInfo/index.md) : `GET /sectionInfo`
+* [retrieve all sections for a subject](sectionInfo/{subject}.md) : `GET /sectionInfo/{subject}`
+* [retrieve all sections for a course](sectionInfo/{subject}{number}.md) : `GET /sectionInfo/{subject}/{number}`
+* [retrieve section for a specified section](sectionInfo/{subject}{number}{section}.md) : `GET /sectionInfo/{subject}/{number}/{section}`
+* [retrieve all courses at UBC](course/index.md) : `GET /course`
 * [retrieve all courses in a subject](course/{subject}.md) : `GET /course/{subject}`
-* [retrieve all sections in a course](section/{subject}{number}.md) : `GET /section/{subject}/{number}`
+* [retrieve sections in a course with only basic data](section/{subject}{number}.md) : `GET /section/{subject}/{number}`
 
 Use cases:
 - course timetable picker

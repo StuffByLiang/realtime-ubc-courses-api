@@ -1,10 +1,10 @@
 # Get Course/Section Info
 
-Get the details of all sections under the given *academic year, subject, and course number
+Get all sections from a subject
 
-**URL** : `/sectionInfo/:subject/:number`
+**URL** : `/sectionInfo/:subject`
 
-**example** : `/course/CPSC/221`
+**example** : `/course/CPSC`
 
 **Method** : `GET`
 
@@ -18,7 +18,7 @@ Get the details of all sections under the given *academic year, subject, and cou
 
 **Content examples**
 
-For a specific course given department code, number, return the info for all sections within that course in a list
+For a specific department code return the info for all sections within that subject in a list
 
 eg CPSC 221
 
@@ -44,7 +44,7 @@ see [GET sectionInfo/:subject/:number/:section]({subject}{number}{section}.md)
 **Content** :
 ```json
 {
-  "error": "Course Not Found"
+  "error": "Subject Not Found"
 }
 ```
 

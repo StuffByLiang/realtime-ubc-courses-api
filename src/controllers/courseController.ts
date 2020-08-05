@@ -30,6 +30,32 @@ async function getCourse(req:any, res:any) {
   }
 }
 
+async function getAllCourses(req:any, res:any) {
+  const realtime = req.query.realtime; // either 1 (true) or 0/unspecified (false)
+
+  try {                         
+    const doesDataExist = await CourseModel.exists({});
+
+    if (!doesDataExist || realtime) {
+      const courses: Array<Course> = await courseScraper.getAllCourses();
+      // updates the database entry or create if doesn't exist
+      await updateAll(CourseModel, courses, ["subject", "course"])
+    }
+
+    const data = await CourseModel.find({});
+
+    res.json({
+      courses: data
+    });
+  } catch (error) { 
+    res.status(404).send({
+      error: error.message
+    });
+    console.error(error); 
+  }
+}
+
 export default {
-    getCourse
+    getCourse,
+    getAllCourses,
 }
