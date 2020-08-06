@@ -7,6 +7,8 @@ import sectionRoutes from './src/routes/sectionRoutes';
 import sectionInfoRoutes from './src/routes/sectionInfoRoutes';
 import subjectRoutes from './src/routes/subjectRoutes';
 
+import cors from 'cors';
+
 let http = require('http');
 let https = require('https');
 
@@ -36,6 +38,8 @@ if(!isJestRunning()) {
 
 // set up express
 const app = express();
+
+app.use(cors()) // Use this after the variable declaration
 
 function isJestRunning() {
     return process.env.JEST_WORKER_ID !== undefined;

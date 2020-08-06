@@ -12,7 +12,7 @@ import {SectionInfo} from "../src/models/sectionInfo";
 import {Subject} from "../src/models/subject";
 
 
-jest.setTimeout(10000);
+jest.setTimeout(20000);
 
 describe("routes.test.ts", () => {
 
