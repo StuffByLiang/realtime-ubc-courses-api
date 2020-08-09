@@ -7,6 +7,7 @@
     "postinstall": "npm run build",
     "dev": "nodemon index.ts",
     "test": "jest",
+    "coverage": "jest --coverage",
     "lint": "eslint . --ext .ts",
     "build": "tsc",
     "start": "npm run build && node build/index.js"
