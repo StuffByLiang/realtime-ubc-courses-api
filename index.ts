@@ -56,7 +56,7 @@ app.use('/sectionInfo', sectionInfoRoutes);
 app.use('/subject', subjectRoutes);
 
 app.get('/', (req, res) => {
-    res.send('An alligator approaches!');
+    res.send('You\'re probably looking for the documentation. Here ya go. <a href="https://docs.ubccourses.com">https://docs.ubccourses.com</a>');
 });
 
 app.get('/json', (req, res) => {
