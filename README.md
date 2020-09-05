@@ -39,5 +39,4 @@ if you're developing
   - adds signatures to the functions directly
 
 # Documentation 
-[Link to Documentation]([documentation/README.md](https://github.com/StuffByLiang/realtime-ubc-courses-api-documentation))
 https://docs.ubccourses.com
