@@ -47,7 +47,6 @@ describe("routes.test.ts", () => {
   describe("GET / - a simple api endpoint", () => {
     it("Hello API Request", async () => {
       const result = await request(app).get("/");
-      expect(result.text).toEqual("An alligator approaches!");
       expect(result.status).toEqual(200);
     });
   });
@@ -190,7 +189,7 @@ describe("routes.test.ts", () => {
         subject: "CPSC",
         course: "100",
         section: "101",
-        textbooks: [],
+        textbooks: ["No Text Required"],
         // pre_reqs: [],
         prof: "WONG, JESSICA",
         term: "1",
