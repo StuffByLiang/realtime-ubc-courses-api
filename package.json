@@ -36,6 +36,8 @@
     "express": "^4.17.1",
     "mongodb": "^3.6.0",
     "mongoose": "^5.9.27",
+    "mongoose-morgan": "^1.0.16",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "typescript": "^3.9.7"
   },

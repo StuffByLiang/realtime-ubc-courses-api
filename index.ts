@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from "mongoose"
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+import morgan from 'mongoose-morgan';
 
 import courseRoutes from './src/routes/courseRoutes';
 import sectionRoutes from './src/routes/sectionRoutes';
@@ -40,6 +41,11 @@ if(!isJestRunning()) {
 const app = express();
 
 app.use(cors()) // Use this after the variable declaration
+
+// @ts-ignore
+app.use(morgan({
+    connectionString: process.env.MONGO_URI
+}))
 
 function isJestRunning() {
     return process.env.JEST_WORKER_ID !== undefined;
