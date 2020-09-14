@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Campus } from ".";
 
 export interface Course {
   name: string;
@@ -10,6 +11,7 @@ export interface Course {
   comments: Array<string>;
   endpoint: string;
   link: string;
+  campus: Campus;
   lastUpdated?: Date;
 }
 
@@ -23,6 +25,7 @@ const courseSchema = new mongoose.Schema({
   comments: [String],
   endpoint: String,
   link: String,
+  campus: String,
   lastUpdated: { type: Date, default: Date.now },
 })
 

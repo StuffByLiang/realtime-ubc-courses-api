@@ -4,6 +4,14 @@ import cheerio from "cheerio";
 import { Schedule } from "src/models";
 
 export class SectionPageScraper {
+  /**
+   * Scrapes section data from UBC given subject, course, and section
+   * 
+   * @param  {string} subject
+   * @param  {string} course
+   * @param  {string} section
+   * @returns Promise
+   */
   async getData(subject: string, course: string, section: string): Promise<SectionPageData> {
     const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=${subject}&course=${course}&section=${section}`;
     const html: string = await getSiteHtml(url);

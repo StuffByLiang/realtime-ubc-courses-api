@@ -2,7 +2,7 @@ import { BrowseSubjectsPageScraper, CoursePageScraper, SectionPageScraper, Subje
 import { CourseTableRow, SectionPageData, SectionTableRow, SubjectTableRow } from "../models/pages";
 import GradeScraper from "./GradeScraper";
 import { InvalidSubjectError, InvalidCourseError, InvalidSectionError } from "../errors";
-import { Course, SectionInfo, Section, Subject, SectionInfoModel } from "src/models";
+import { Course, SectionInfo, Section, Subject, SectionInfoModel, Campus } from "../models";
 
 /**
  * high level class that parses course and section information from urls 
@@ -19,12 +19,13 @@ export default class CourseScraper {
   /**
    * Returns all of the courses for a specific department, or throws an invalidSubjectError if the courses list is empty
    * 
-   * @param  {string} subject - Department Code
-   * @returns Promise         - Courses offered in the Department
+   * @param  {string} subject      - Department Code
+   * @throws {InvalidSubjectError} - Course list is empty
+   * @returns Promise              - Courses offered in the Department
    */
-  async getCourseList(subject: string): Promise<Array<Course>> {
+  async getCourseList(subject: string, campus: Campus = Campus.vancouver): Promise<Array<Course>> {
     // grab all courses from the subjects page
-    const subjectPageData = await this.subjectPageScraper.getData(subject);
+    const subjectPageData = await this.subjectPageScraper.getData(subject, campus);
 
     const courses: Array<Course> = [];
     
@@ -32,7 +33,7 @@ export default class CourseScraper {
     await Promise.all(
       subjectPageData.courses.map(async (courseTableRow: CourseTableRow) => {
         const { name, subject, course, title, link } = courseTableRow; // destructuring the object
-        const { description, credits, comments } = await this.coursePageScraper.getData(subject, course);
+        const { description, credits, comments } = await this.coursePageScraper.getData(subject, course, campus);
 
         courses.push({
           name,
@@ -40,9 +41,10 @@ export default class CourseScraper {
           course,
           title,
           link,
+          campus,
 
           description,
-          credits: parseInt(credits),
+          credits: parseFloat(credits),
           comments,
           endpoint: `/section/${subject}/${course}`,
         });
@@ -55,13 +57,19 @@ export default class CourseScraper {
     return courses;
   }
 
-  async getAllCourses(): Promise<Array<Course>> {
-    let subjectList: Array<Subject> = await this.getSubjectList();
+  /**
+   * Returns all courses at ubc for a specified campus
+   * 
+   * @param {Campus} campus
+   * @returns Promise
+   */
+  async getAllCourses(campus: Campus): Promise<Array<Course>> {
+    let subjectList: Array<Subject> = await this.getSubjectList(campus);
     
     let result = await Promise.all(subjectList.map(async (subject) => {
       try {
         if(!subject.hasCourses) return [];
-        const sectionInfoList = await this.getCourseList(subject.subject);
+        const sectionInfoList = await this.getCourseList(subject.subject, campus);
         console.log("done " + subject.subject)
         return sectionInfoList
       } catch (err) {
@@ -79,10 +87,11 @@ export default class CourseScraper {
    * if section is not found for this course or
    * course name or course is invalid 
    * 
-   * @param  {string} subject - Department Code
-   * @param  {string} course  - Course #
-   * @param  {string} section - Course section #
-   * @returns Promise         - Section Info
+   * @param  {string} subject      - Department Code
+   * @param  {string} course       - Course #
+   * @param  {string} section      - Course section #
+   * @throws {InvalidSectionError} - section is not found or course name is invalid
+   * @returns Promise              - Section Info
    */
   async getSectionInfo(subject: string, course: string, section: string): Promise<SectionInfo> {
     const sectionPageData: SectionPageData = await this.sectionPageScraper.getData(subject, course, section);
@@ -102,9 +111,10 @@ export default class CourseScraper {
   /**
    * Returns all of the Sections for the specified course, or throws an invalidCourseError if dept code + course course does not exist
    * e.g. throws an invalidCourseError if getSectionList is called on CPSC 1
-   * @param  {string} subject - Department Code
-   * @param  {string} course  - Course #
-   * @returns Promise         - Sections offered for the course
+   * @param  {string} subject     - Department Code
+   * @param  {string} course      - Course #
+   * @throws {InvalidCourseError} - course doesnt exist
+   * @returns Promise             - Sections offered for the course
    */
   async getSectionList(subject: string, course: string): Promise<Array<Section>> {
     const coursePageData = await this.coursePageScraper.getData(subject, course);
@@ -150,6 +160,12 @@ export default class CourseScraper {
     return sectionInfoList;
   }
 
+  /**
+   * Returns all sectionInfo for each course in a subject
+   * 
+   * @param  {string} subject
+   * @returns Promise
+   */
   async getSectionInfoListForSubject(subject: string): Promise<Array<SectionInfo>> {
     let courseList: Array<Course> = await this.getCourseList(subject);
     
@@ -167,7 +183,11 @@ export default class CourseScraper {
 
     return [].concat.apply([], result);
   }
-
+  /**
+   * Returns all sectionInfos at ubc
+   * 
+   * @returns Promise
+   */
   async getAllSectionInfo(): Promise<Array<SectionInfo>> {
     let subjectList: Array<Subject> = await this.getSubjectList();
     
@@ -187,53 +207,18 @@ export default class CourseScraper {
     return [].concat.apply([], result);
   }
 
-  // async getSectionInfoListForSubject(subject: string): Promise<Record<string, Array<SectionInfo>>> {
-  //   let courseList: Array<Course> = await this.getCourseList(subject);
-  //   let map = {};
-    
-  //   await Promise.all(courseList.map(async (course) => {
-  //     try {
-  //       const sectionInfoList = await this.getSectionInfoList(course.subject, course.course);
-  //       // console.log("done " + course.name)
-  //       map[course.name] = sectionInfoList;
-  //     } catch (err) {
-  //       // console.log("error course " + course.name)
-  //       // console.log(err)
-  //     }
-  //   }));
-
-  //   return map;
-  // }
-
-  // async getAllSectionInfo(): Promise<Record<string, Record<string, Array<SectionInfo>>>> {
-  //   let subjectList: Array<Subject> = await this.getSubjectList();
-  //   let map = {};
-    
-  //   await Promise.all(subjectList.map(async (subject) => {
-  //     try {
-  //       const data = await this.getSectionInfoListForSubject(subject.subject);
-  //       // console.log("done " + course.name)
-  //       map[subject.subject] = data;
-  //     } catch (err) {
-  //       // console.log("error course " + course.name)
-  //       // console.log(err)
-  //     }
-  //   }));
-
-  //   return map;
-  // }
-
   /**
    * Returns all of the subjects at UBC
    * @returns Promise         - Info for all of the subjects offered at UBC
    */
-  async getSubjectList(): Promise<Array<Subject>> {
-    const browseSubjectsPageData = await this.browseSubjectsPageScraper.getData();
+  async getSubjectList(campus = Campus.vancouver): Promise<Array<Subject>> {
+    const browseSubjectsPageData = await this.browseSubjectsPageScraper.getData(campus);
     const subjectList: Array<Subject> = browseSubjectsPageData.subjects.map((subjectTableRow: SubjectTableRow): Subject => {
       const { subject } = subjectTableRow;
       return {
         ...subjectTableRow,
-        endpoint: `/course/${subject}`
+        endpoint: `/course/${subject}`,
+        campus
       }
     });
     return subjectList;

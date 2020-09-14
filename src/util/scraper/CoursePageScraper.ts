@@ -1,11 +1,23 @@
 import { getSiteHtml, trim } from "../helpers";
 import { CoursePageData, SectionTableRow } from "../../models/pages";
+import { Campus, Schedule } from "../../models";
 import cheerio from "cheerio";
-import { Schedule } from "src/models";
 
 export class CoursePageScraper {
-  async getData(subject: string, course: string): Promise<CoursePageData> {
-    const url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${course}`;
+  /**
+   * Scrapes the UBC site given a subject and a course and returns course data in the form of CoursePageData
+   * 
+   * @param  {string} subject
+   * @param  {string} course
+   * @returns Promise
+   */
+  async getData(subject: string, course: string, campus: Campus = Campus.vancouver): Promise<CoursePageData> {
+    let url: string = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${course}`;
+    if(campus == Campus.vancouver) {
+      url += "&campuscd=UBC";
+    } else {
+      url += "&campuscd=UBCO";
+    }
     const html: string = await getSiteHtml(url);
     return this.parseHtml(html);
   }
@@ -23,6 +35,8 @@ export class CoursePageScraper {
     const $ = cheerio.load(html);
     let sections: Array<SectionTableRow> = []; 
     let tableRows: Cheerio = $("table.table.table-striped.section-summary > tbody").children(); // rows of the table cont. courses
+    const campusCode = $('.ubc7-campus').text().split(" ")[0].toLowerCase() === 'vancouver' ? 'UBC' : 'UBCO';
+    
     for(let i = 0; i < tableRows.length; i++) {
       let firstRow = $(tableRows[i]);
 
@@ -41,7 +55,7 @@ export class CoursePageScraper {
       }
 
       let s: SectionTableRow = {
-        ...this.parseSectionTableRow(firstRow),
+        ...this.parseSectionTableRow(firstRow, campusCode),
         schedule,
         term: terms.includes('1-2') || (terms.includes('1') && terms.includes('2')) ? '1-2' : terms[0]
       };
@@ -66,15 +80,16 @@ export class CoursePageScraper {
       credits: $("p:contains(Credits: )").text().replace("Credits: ", ""),
       comments,
       sections,
-      link: `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${course}`,
+      link: `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${course}&campuscd=${campusCode}`,
     };
   }
   /**
    * Given a cheerio/jquery tableRow element, parse it into a Section object. 
    * @param  {Cheerio} tableRow
+   * @param  {string}  campusCode
    * @returns Section
    */
-  parseSectionTableRow(tableRow: Cheerio): SectionTableRow {
+  parseSectionTableRow(tableRow: Cheerio, campusCode: string): SectionTableRow {
     const status = trim(tableRow.children().eq(0).text());
 
     let section = {
@@ -88,7 +103,7 @@ export class CoursePageScraper {
       interval: tableRow.children().eq(4).text(),
       schedule: [],
       comments: tableRow.children().eq(8).find(".accordion-body").text().trim(),
-      link: "https://courses.students.ubc.ca" + tableRow.children().find("a").attr("href"),
+      link: "https://courses.students.ubc.ca" + tableRow.children().find("a").attr("href") + `&campuscd=${campusCode}`,
     }
 
     return section; 

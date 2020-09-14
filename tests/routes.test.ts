@@ -6,10 +6,8 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 const mongod = new MongoMemoryServer();
 
-import {Course} from "../src/models/course";
-import {Section} from "../src/models/section";
-import {SectionInfo} from "../src/models/sectionInfo";
-import {Subject} from "../src/models/subject";
+import {Section, Campus, Course, SectionInfo, Subject} from "../src/models";
+import { search } from "../src/util/helpers";
 
 
 jest.setTimeout(20000);
@@ -28,21 +26,6 @@ describe("routes.test.ts", () => {
 
       db = await mongoose.connect(uri, mongooseOpts);
   });
-
-  /**
-   * Returns element of array that contains a name equal to the given name. else return null. used to help for testing
-   * 
-   * @param  {string} nameKey
-   * @param  {Array<any>} myArray
-   */
-  function search(nameKey: string, myArray: Array<any>) {
-    for (var i=0; i < myArray.length; i++) {
-        if (myArray[i].name === nameKey) {
-            return myArray[i];
-        }
-    }
-    return null;
-  }
 
   describe("GET / - a simple api endpoint", () => {
     it("Hello API Request", async () => {
@@ -77,12 +60,13 @@ describe("routes.test.ts", () => {
         title: "Basic Algorithms and Data Structures",
         description: "Design and analysis of basic algorithms and data structures; algorithm analysis methods, searching and sorting algorithms, basic data structures, graphs and concurrency.",
         credits: 4,
+        campus: Campus.vancouver,
         comments: ["Choose one section from all 2 activity types. (e.g. Lecture and Laboratory)"],
         endpoint: "/section/CPSC/221",
-        link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221"
+        link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221&campuscd=UBC"
       };
 
-      const data = search("CPSC 221", result.body.courses);
+      const data = search("name","CPSC 221", result.body.courses);
       expect(result.status).toEqual(200);
       expect(data).toMatchObject(cpsc221);
 
@@ -258,7 +242,7 @@ describe("routes.test.ts", () => {
       expect(result.body.length).toBeGreaterThan(1); 
       expect(result.body).not.toContain(section2);
 
-      const actualSection = search("CPSC 100 101 (Web-Oriented Course)", result.body);
+      const actualSection = search("name","CPSC 100 101 (Web-Oriented Course)", result.body);
       expect(actualSection).toBeTruthy();
       expect(actualSection).toMatchObject(section);
       
@@ -317,12 +301,12 @@ describe("routes.test.ts", () => {
           }
         ],
         comments: "If all the lab and/or tutorial seats are full the department will ensure that there are enough lab/tutorial seats available for the number of students registered in the course by either adding additional lab/tutorial sections or expenadind the number of seats in the activity once we know how many extra students we will need to accommodate. However, there is no guarantee that these seats will fit your preferred time.  You may need to change your registration in other courses to get access to a lab/tutorial where there are available seats.",
-        link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
+        link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101&campuscd=UBC",
         endpoint: "/sectionInfo/CPSC/221/101",
       }
       expect(result.status).toEqual(200);
 
-      let data = search("CPSC 221 101", result.body.sections);
+      let data = search("name","CPSC 221 101", result.body.sections);
 
       expect(data).toMatchObject(section);
 
@@ -357,16 +341,15 @@ describe("routes.test.ts", () => {
         title: "Computer Science",
         faculty: "Faculty of Science",
         endpoint: "/course/CPSC",
-        link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-department&dept=CPSC",
+        campus: Campus.vancouver,
+        link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-department&dept=CPSC&campuscd=UBC",
         hasCourses: true
       }
       expect(result.status).toEqual(200);
 
-      expect(result.body.subjects).toEqual( 
-        expect.arrayContaining([ 
-          expect.objectContaining(subject)
-        ])
-      );
+      let data = search("subject", "CPSC", result.body.subjects)
+
+      expect(data).toMatchObject(subject);
       expect(result.body.subjects.length).toBeGreaterThan(1);
     });
   });

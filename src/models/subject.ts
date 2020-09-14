@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Campus } from "./campus";
 
 export interface Subject {
   subject: string;
@@ -7,6 +8,7 @@ export interface Subject {
   endpoint: string;
   link: string;
   hasCourses: boolean;
+  campus: Campus;
   lastUpdated?: Date;
 }
 
@@ -17,6 +19,7 @@ const subjectSchema = new mongoose.Schema({
   endpoint: String,
   link: String,
   hasCourses: Boolean,
+  campus: String,
   lastUpdated: Date,
 })
 
