@@ -62,8 +62,25 @@ async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<
   );
 }
 
+/**
+   * Returns element of array that contains a name equal to the given name. else return null. used to help for testing
+   * 
+   * @param  {string} key
+   * @param  {string} nameKey
+   * @param  {Array<any>} myArray
+   */
+  function search(key: string, nameKey: string, myArray: Array<any>) {
+    for (var i=0; i < myArray.length; i++) {
+        if (myArray[i][key] === nameKey) {
+            return myArray[i];
+        }
+    }
+    return null;
+  }
+
 export {
   getSiteHtml,
   trim,
-  updateAll
+  updateAll,
+  search
 }

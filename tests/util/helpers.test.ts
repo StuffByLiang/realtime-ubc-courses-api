@@ -1,7 +1,7 @@
 import { getSiteHtml } from "src/util/helpers";
 
 describe("test helpers.ts", () => {
-  describe("getSiteHtml on google should return valid html", async () => {
+  it("getSiteHtml on google should return valid html", async () => {
     let html = await getSiteHtml("https://google.com");
     expect(html).toMatch(/[Gg]oogle/); // testing to see if html contains Google using regex
   })

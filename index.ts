@@ -19,8 +19,25 @@ http.globalAgent.maxSockets = 50;
 // set up environment variables from .env file
 dotenv.config();
 
+// set up express
+const app = express();
+
+// enable cross origin
+app.use(cors());
+
+
+function isJestRunning() {
+    return process.env.JEST_WORKER_ID !== undefined;
+}
+
 // set up mongoose
 if(!isJestRunning()) {
+    // setup logging
+    // @ts-ignore
+    app.use(morgan({
+        connectionString: process.env.MONGO_URI
+    }))
+
     mongoose.connect(process.env.MONGO_URI || "", {useNewUrlParser: true, useUnifiedTopology: true})
     .then(
         () => {
@@ -35,20 +52,6 @@ if(!isJestRunning()) {
     mongoose.connection.on('error', err => {
         console.error(err);
     });
-}
-
-// set up express
-const app = express();
-
-app.use(cors()) // Use this after the variable declaration
-
-// @ts-ignore
-app.use(morgan({
-    connectionString: process.env.MONGO_URI
-}))
-
-function isJestRunning() {
-    return process.env.JEST_WORKER_ID !== undefined;
 }
 
 const defaultPort = isJestRunning() ? 3001 : 3000;
