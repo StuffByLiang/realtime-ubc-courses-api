@@ -13,9 +13,10 @@ export interface SectionPageData {
   course: string;
   section: string;
   credits: string;
-  prof: string; 
+  prof: string;
   term: string;
   year: string;
+  session: string;
   schedule: Array<Schedule>;
   total_seats_remaining: number;
   currently_registered: number;
@@ -23,5 +24,7 @@ export interface SectionPageData {
   restricted_seats_remaining: number;
   seats_reserved_for: Array<string>;
   textbooks: Array<string>;
-  link: string; 
+  link: string;
+  modeOfDelivery: string;
+  requiresInPersonAttendance: string;
 }

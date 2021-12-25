@@ -1,6 +1,7 @@
 import axios from "axios";
-import { Mongoose, Model } from "mongoose";
-import { BulkWriteOpResultObject } from "mongodb";
+import * as mongoose from "mongoose";
+import { BulkWriteResult } from "mongodb";
+import cheerio from "cheerio"
 /**
    * sends a request to the url and gets the entire html as a string
    * 
@@ -12,7 +13,7 @@ import { BulkWriteOpResultObject } from "mongodb";
    */
 async function getSiteHtml(url: string): Promise<string> {
   try {
-    let res = await axios.get(url);
+    const res = await axios.get(url);
     return res.data;
   } catch (error) {
     console.error(error)
@@ -26,7 +27,7 @@ async function getSiteHtml(url: string): Promise<string> {
  * @returns string
  */
 function trim(string: string): string {
-  if(string === null || string === undefined) return null;
+  if (string === null || string === undefined) return null;
   return string.trim();
 }
 
@@ -34,15 +35,15 @@ function trim(string: string): string {
  * Takes in a mongoose Model, and updates each document in the list filtering based on the given keys.
  * Creates the document if it doesn't exist.
  * 
- * @param  {Model<any>} Model
+ * @param  {mongoose.Model<any>} Model
  * @param  {Array<any>} list
  * @param  {Array<string>} filterKeys
  * @returns Promise<BulkWriteOpResultObject>
  */
-async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<string>): Promise<BulkWriteOpResultObject> {
+async function updateAll(Model: mongoose.Model<any>, list: Array<any>, filterKeys: Array<string>): Promise<BulkWriteResult> {
   return await Model.bulkWrite(
     list.map(item => {
-      if(!item) return null;
+      if (!item) return null;
       return {
         updateOne: {
           filter: filterKeys.reduce((filter, key) => {
@@ -57,8 +58,8 @@ async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<
         }
       }
     }).filter(x => x), {
-      ordered: false, // runs in parallel
-    }
+    ordered: false, // runs in parallel
+  }
   );
 }
 
@@ -69,18 +70,25 @@ async function updateAll(Model: Model<any>, list: Array<any>, filterKeys: Array<
    * @param  {string} nameKey
    * @param  {Array<any>} myArray
    */
-  function search(key: string, nameKey: string, myArray: Array<any>) {
-    for (var i=0; i < myArray.length; i++) {
-        if (myArray[i][key] === nameKey) {
-            return myArray[i];
-        }
+function search(key: string, nameKey: string, myArray: Array<any>) {
+  for (let i = 0; i < myArray.length; i++) {
+    if (myArray[i][key] === nameKey) {
+      return myArray[i];
     }
-    return null;
   }
+  return null;
+}
+
+async function getCurrentSession(): Promise<string> {
+  const html = await getSiteHtml("https://courses.students.ubc.ca/")
+  const $ = cheerio.load(html);
+  return $("button:contains(Session: )").text().split(" ")[1] + $("button:contains(Session: )").text().split(" ")[2][0]
+}
 
 export {
   getSiteHtml,
   trim,
   updateAll,
-  search
+  search,
+  getCurrentSession,
 }

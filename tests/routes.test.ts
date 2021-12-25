@@ -36,7 +36,7 @@ describe("routes.test.ts", () => {
 
   // testing json data
   describe("GET /json - a simple json endpoint", () => {
-    let expectedJson = {
+    const expectedJson = {
       "string": "a",
       "number": 1
     };
@@ -306,7 +306,7 @@ describe("routes.test.ts", () => {
       }
       expect(result.status).toEqual(200);
 
-      let data = search("name","CPSC 221 101", result.body.sections);
+      const data = search("name","CPSC 221 101", result.body.sections);
 
       expect(data).toMatchObject(section);
 
@@ -347,7 +347,7 @@ describe("routes.test.ts", () => {
       }
       expect(result.status).toEqual(200);
 
-      let data = search("subject", "CPSC", result.body.subjects)
+      const data = search("subject", "CPSC", result.body.subjects)
 
       expect(data).toMatchObject(subject);
       expect(result.body.subjects.length).toBeGreaterThan(1);

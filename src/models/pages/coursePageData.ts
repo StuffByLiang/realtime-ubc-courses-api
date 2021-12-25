@@ -17,6 +17,8 @@ export interface CoursePageData {
   // co_reqs: string; TODO
   sections: Array<SectionTableRow>;
   link: string;
+  year: string;
+  session: string
 }
 
 export interface SectionTableRow {
@@ -31,4 +33,6 @@ export interface SectionTableRow {
   schedule: Array<Schedule>
   comments: string;
   link: string;
+  modeOfDelivery: string;
+  requiresInPersonAttendance: string;
 }

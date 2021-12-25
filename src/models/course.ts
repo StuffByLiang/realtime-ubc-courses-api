@@ -13,6 +13,8 @@ export interface Course {
   link: string;
   campus: Campus;
   lastUpdated?: Date;
+  year: string;
+  session: string;
 }
 
 const courseSchema = new mongoose.Schema({
@@ -27,6 +29,8 @@ const courseSchema = new mongoose.Schema({
   link: String,
   campus: String,
   lastUpdated: { type: Date, default: Date.now },
+  year: String,
+  session: String,
 })
 
 export const CourseModel = mongoose.model('Course', courseSchema);

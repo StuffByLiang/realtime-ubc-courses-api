@@ -5,9 +5,7 @@ import { Campus } from "src/models";
 describe("BrowseCoursesPageScraper.ts", () => {
   const browseSubjectsPageScraper = new BrowseSubjectsPageScraper();
 
-  beforeAll(() => {
-    
-  })
+  
 
   it("should have an array containing CPSC and other courses", async () => {
     const cpscSubject: SubjectTableRow = {
@@ -23,7 +21,7 @@ describe("BrowseCoursesPageScraper.ts", () => {
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-all-departments&campuscd=UBC"
     }
 
-    let result = await browseSubjectsPageScraper.getData(Campus.vancouver);
+    const result = await browseSubjectsPageScraper.getData(Campus.vancouver);
     expect(result).toMatchObject(expected);
     expect(result.subjects.length).toBeGreaterThan(20); // definately more than 20 courses... dont know the exact number
   })
@@ -42,7 +40,7 @@ describe("BrowseCoursesPageScraper.ts", () => {
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-all-departments&campuscd=UBCO"
     }
 
-    let result = await browseSubjectsPageScraper.getData(Campus.okanagan);
+    const result = await browseSubjectsPageScraper.getData(Campus.okanagan);
     expect(result).toMatchObject(expected);
     expect(result.subjects.length).toBeGreaterThan(10); // definately more than 10 courses... dont know the exact number
   })

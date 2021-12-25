@@ -6,6 +6,8 @@
 export interface BrowseSubjectsPageData {
   subjects: Array<SubjectTableRow>;
   link: string;
+  year: string;
+  session: string
 }
 
 /*

@@ -4,9 +4,7 @@ import { SectionPageScraper } from "src/util/scraper";
 describe("SectionPageScraper.ts", () => {
   const sectionPageScraper = new SectionPageScraper();
 
-  beforeAll(() => {
-    
-  })
+  
 
   it("getData should contain relevent information for CPSC 221 101", async () => {
     const expected: SectionPageData = {
@@ -55,7 +53,7 @@ describe("SectionPageScraper.ts", () => {
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=CPSC&course=221&section=101",
     }
 
-    let result = await sectionPageScraper.getData("CPSC", "221", "101");
+    const result = await sectionPageScraper.getData("CPSC", "221", "101");
     expect(result).toMatchObject(expected);
   })
 

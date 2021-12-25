@@ -1,9 +1,9 @@
-import {GradeInfo} from "../models/gradeInfo";
+import { GradeInfo } from "../models/gradeInfo";
 
 /**
  * High level class that parses the grades for a specific course section
  */
-const axios = require('axios').default;
+import axios from "axios"
 
 export default class GradeScraper {
     /**
@@ -20,7 +20,7 @@ export default class GradeScraper {
             console.error(error);
         }
     }
-    
+
     /**
      * 
      * Returns the average of the last 4 sessions that are of the same type as the given session, or returns null 
@@ -42,10 +42,10 @@ export default class GradeScraper {
 
         return 0;
 
-        let url1: string = "";              // The URL's for the 4 previous years
-        let url2: string = "";
-        let url3: string = "";
-        let url4: string = "";
+        let url1 = "";              // The URL's for the 4 previous years
+        let url2 = "";
+        let url3 = "";
+        let url4 = "";
 
         const currentYear: number = year;
         const previousYear1: number = currentYear - 2;    //Gotta start from 2nd year back rip 
@@ -53,44 +53,44 @@ export default class GradeScraper {
         const previousYear3: number = currentYear - 4;
         const previousYear4: number = currentYear - 5;
 
-        let urlArray: Array<string> = [];
+        const urlArray: Array<string> = [];
         url1 = `https://ubcgrades.com/api/grades/${previousYear1}${term}/${subject}/${course}/${section}`;
         url2 = `https://ubcgrades.com/api/grades/${previousYear2}${term}/${subject}/${course}/${section}`;
         url3 = `https://ubcgrades.com/api/grades/${previousYear3}${term}/${subject}/${course}/${section}`;
         url4 = `https://ubcgrades.com/api/grades/${previousYear4}${term}/${subject}/${course}/${section}`;
-        
+
         urlArray.push(url1);
         urlArray.push(url2);
         urlArray.push(url3);
         urlArray.push(url4);
 
-        let jsonArray: Array<GradeInfo> = [];
+        const jsonArray: Array<GradeInfo> = [];
 
         for (let i = 0; i < urlArray.length; i++) {
-            const jsonObject: GradeInfo =  await this.getSiteHtml(urlArray[i]);
+            const jsonObject: GradeInfo = await this.getSiteHtml(urlArray[i]);
             if (Object.keys(jsonObject).length !== 0 && jsonObject.constructor === Object) {
                 jsonArray.push(jsonObject);
             }
         }
 
-        if(jsonArray.length === 0) {
+        if (jsonArray.length === 0) {
             // no results
             return 0;
         }
-        
-        let counter  = 0; 
-        for(let i = 0; i < jsonArray.length; i++) {
-            if(Object.keys(jsonArray[i]).length === 0) counter++;
-        }
-        if(counter == 4) return null // if we cant get any average data from the course. 
 
-        let averageArray: Array<number> = [];
-        
+        let counter = 0;
+        for (let i = 0; i < jsonArray.length; i++) {
+            if (Object.keys(jsonArray[i]).length === 0) counter++;
+        }
+        if (counter == 4) return null // if we cant get any average data from the course. 
+
+        const averageArray: Array<number> = [];
+
         for (let i = 0; i < jsonArray.length; i++) {
             averageArray.push(jsonArray[i].stats.average);
         }
 
-        let overallAverage: number = 0;
+        let overallAverage = 0;
 
         averageArray.forEach((yearAverage) => {
             overallAverage += yearAverage;
@@ -103,9 +103,8 @@ export default class GradeScraper {
 
     //TODO: Add DOC COMMENTS
     //Return the average % of students that pass the course in the past 4 terms (same term as the given term, W/S)
-    async getSectionPassPercentage() {}
+    async getSectionPassPercentage() { }
 
-    
+
 }
 
- 

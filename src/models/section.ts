@@ -6,7 +6,7 @@ export interface Section {
   subject: string; // CPSC 
   course: string; // 221
   section: string; // 911
-  status: string; 
+  status: string;
   activity: string;
   term: string;
   schedule: Array<Schedule>
@@ -15,6 +15,10 @@ export interface Section {
   link: string;
   endpoint: string;
   lastUpdated?: Date;
+  modeOfDelivery: string;
+  requiresInPersonAttendance: string;
+  year: string;
+  session: string;
 }
 
 const sectionSchema = new mongoose.Schema({
@@ -22,7 +26,7 @@ const sectionSchema = new mongoose.Schema({
   subject: String, // CPSC 
   course: String, // 221
   section: String, // 911
-  status: String, 
+  status: String,
   activity: String,
   term: String,
   schedule: [{
@@ -36,6 +40,10 @@ const sectionSchema = new mongoose.Schema({
   link: String,
   endpoint: String,
   lastUpdated: { type: Date, default: Date.now },
+  modeOfDelivery: String,
+  requiresInPersonAttendance: String,
+  year: String,
+  session: String,
 })
 
 export const SectionModel = mongoose.model('Section', sectionSchema);

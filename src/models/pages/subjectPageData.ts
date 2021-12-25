@@ -8,6 +8,8 @@ export interface SubjectPageData {
   description: string;
   courses: Array<CourseTableRow>;
   link: string;
+  year: string;
+  session: string
 }
 
 export interface CourseTableRow {

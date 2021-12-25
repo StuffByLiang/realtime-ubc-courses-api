@@ -5,9 +5,7 @@ import { search } from "../../../src/util/helpers";
 describe("CoursePageScraper.ts", () => {
   const coursePageScraper = new CoursePageScraper();
 
-  beforeAll(() => {
-    
-  })
+  
 
   it("getData should return data for CPSC 221 and contain section 101 and L1A", async () => {
     const cpscSection: SectionTableRow = {
@@ -76,10 +74,10 @@ describe("CoursePageScraper.ts", () => {
       link: "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=221&campuscd=UBC"
     }
 
-    let result = await coursePageScraper.getData("CPSC", "221");
+    const result = await coursePageScraper.getData("CPSC", "221");
 
-    let lab = search("name", "CPSC 221 L1A", result.sections);
-    let section = search("name", "CPSC 221 101", result.sections);
+    const lab = search("name", "CPSC 221 L1A", result.sections);
+    const section = search("name", "CPSC 221 101", result.sections);
 
 
     expect(result).toMatchObject(expected);

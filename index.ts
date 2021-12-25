@@ -10,11 +10,11 @@ import subjectRoutes from './src/routes/subjectRoutes';
 
 import cors from 'cors';
 
-let http = require('http');
-let https = require('https');
+import http from "http"
+import https from "https"
 
-https.globalAgent.maxSockets = 50;
-http.globalAgent.maxSockets = 50;
+https.globalAgent.maxSockets = 30;
+http.globalAgent.maxSockets = 30;
 
 // set up environment variables from .env file
 dotenv.config();
@@ -31,23 +31,24 @@ function isJestRunning() {
 }
 
 // set up mongoose
-if(!isJestRunning()) {
+if (!isJestRunning()) {
     // setup logging
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     app.use(morgan({
         connectionString: process.env.MONGO_URI
     }))
 
-    mongoose.connect(process.env.MONGO_URI || "", {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(
-        () => {
-            // success
-            console.log('Connected to mongodb database')
-        },
-        err => {
-            console.error(err)
-        }
-    );
+    mongoose.connect(process.env.MONGO_URI || "")
+        .then(
+            () => {
+                // success
+                console.log('Connected to mongodb database')
+            },
+            err => {
+                console.error(err)
+            }
+        );
 
     mongoose.connection.on('error', err => {
         console.error(err);
@@ -56,7 +57,7 @@ if(!isJestRunning()) {
 
 const defaultPort = isJestRunning() ? 3001 : 3000;
 
-let port = process.env.PORT || defaultPort;
+const port = process.env.PORT || defaultPort;
 
 // set up routes
 app.use('/course', courseRoutes);
@@ -83,7 +84,7 @@ app.use((req, res, next) => {
 app.get('/allsaints', (req, res) => {
     res.send("It's not an ocean it's a lake.");
 });
-const server = app.listen(port, () => console.log('Course Scraper app listening on port 3000!'));  
+const server = app.listen(port, () => console.log('Course Scraper app listening on port 3000!'));
 
 export {
     app,

@@ -3,7 +3,7 @@ import { Course } from "../models/course"
 import CourseScraper from "../util/CourseScraper"
 import courseController from '../controllers/courseController'
 
-var router = express.Router(); 
+const router = express.Router();
 
 const courseScraper = new CourseScraper()
 

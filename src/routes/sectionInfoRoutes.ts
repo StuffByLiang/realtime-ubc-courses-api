@@ -1,7 +1,7 @@
 import express from 'express';
 import sectionInfoController from '../controllers/sectionInfoController';
 
-var router = express.Router();
+const router = express.Router();
 
 //any endpoints beginning with /sectionInfo
 
